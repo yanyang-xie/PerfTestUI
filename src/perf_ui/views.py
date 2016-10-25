@@ -12,7 +12,16 @@ def page_error(request):
     return render_to_response('500.html')
 
 def index(request):
-    return render(request, 'perf_ui/index.html')
+    return render(request, 'perf_ui/base.html')
+
+def result_vod_t6(request):
+    return render(request, 'perf_ui/vod-t6-index.html')
+
+def result_linear_t6(request):
+    return render(request, 'perf_ui/linear-t6-index.html')
+
+def result_cdvr_t6(request):
+    return render(request, 'perf_ui/cdvr-t6-index.html')
 
 def about(request):
     pass
