@@ -2,10 +2,111 @@
 
 {% block header %}
 <script>
-	
+
 </script>
 {% endblock%}
 
 {% block main %}
-	This is VOD benchmark result
+	<div class="row">
+   <div class="col-sm-6 col-md-4">
+      <div class="thumbnail">
+         <img src="http://www.javabeat.net/wp-content/uploads/2014/03/amazing-300x214.jpg"
+          alt="Index response time distribution">
+      </div>
+      <h4>Index Response</h4>
+      <div class="caption">
+      	<table class="table">
+		  <tbody>
+		    <tr class="active">
+		      <td>Average response</td>
+		      <td>30 ms</td>
+		    <tr class="danger">
+		      <td>Failure Rate</td>
+		      <td>0.0%</td>
+		     </tr>
+		  </tbody>
+		</table>
+      
+         <p>
+         <a href="#" class="btn btn-primary" role="button">Distribution Details</a>
+         </p>
+      </div>
+   </div>
+   <div class="col-sm-6 col-md-4">
+      <div class="thumbnail">
+         <img src="http://www.javabeat.net/wp-content/uploads/2014/05/dummy_image2-300x300.jpg"
+            alt="my_image1">
+      </div>
+      <div class="caption">
+	      <h3>Second Image</h3>
+	      <p>The Bootstrap is most popular front end framework for creating websites and web applications.
+	  	  Bootstrap is a powerful front end framework which makes faster and easier web development.</p>
+	  	  <p><a href="#" class="btn btn-primary" role="button">View</a>
+	  	  <a href="#" class="btn btn-success" role="button">Download</a></p>
+      </div>
+   </div>
+   <div class="col-sm-6 col-md-4">
+      <div class="caption">
+	  	  <table class="table">
+		  <thead>
+		    <tr>
+		      <th>Test Environment</th>
+		      <th></th>
+		     </tr>
+		  </thead>
+		  <tbody>
+		    <tr class="active">
+		      <td>Version</td>
+		      <td>VEX-2.8-ER2</td>
+		    <tr class="success">
+		      <td>Type</td>
+		      <td>VOD_T6</td>
+		    <tr class="warning">
+		      <td>Date</td>
+		      <td>20/10/2013</td>
+		    <tr class="danger">
+		      <td>Concurrent</td>
+		      <td>100</td>
+		     </tr>
+		  </tbody>
+		</table>
+		<p />
+		<table class="table">
+		    <thead>
+			    <tr>
+			      <th>Test Environment</th>
+			      <th></th>
+			     </tr>
+			  </thead>
+		    <tbody>
+		      <tr class="active">
+		        <td>SAP Required</td>
+		        <td>True</td>
+		      </tr>
+		      <tr class="active">
+		        <td>Asset Number</td>
+		        <td>15000</td>
+		      </tr>
+		      <tr class="active">
+		        <td>Media Request Number</td>
+		        <td>3</td>
+		      </tr>
+		      <tr class="active">
+		        <td>Master Size</td>
+		        <td>150k</td>
+		      </tr>
+		      <tr class="active">
+		        <td>Media Playlist Size</td>
+		        <td>150k</td>
+		      </tr>
+		    </tbody>
+		 </table>
+		
+		 <p>
+         	<a href="#" class="btn btn-success" role="button">Download Test Profile</a>
+         </p>
+      </div>
+   </div>
+</div>
+
 {% endblock%}
