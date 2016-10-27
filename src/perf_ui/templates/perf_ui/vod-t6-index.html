@@ -1,19 +1,54 @@
 {% extends "./perf_ui/base.html" %}
 
 {% block header %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/i18n/defaults-*.min.js"></script>
+
 <script>
+	
+	$(window).on('load', function () {
+    });
+});
 
 </script>
 {% endblock%}
 
 {% block main %}
-	<div class="row">
+
+<div class="row">
+	 <div class="form-group">
+	    <div class="col-sm-6 col-md-4">
+	      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_version_list" onChange="getRecentlyLoadTestResultByVersion(this.value)"> 
+				<option value="1">VOD_T6</option>
+			</select>
+	    </div>
+	    
+	    <div class="col-sm-6 col-md-4">
+	      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_version_list" onChange="getRecentlyLoadTestResultByVersion(this.value)"> 
+				<option value="1">VEX Core</option>
+				<option value="1">VEX FE</option>
+			</select>
+	    </div>
+	    
+	    <div class="col-sm-6 col-md-4">
+	      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_version_list" onChange="getRecentlyLoadTestResultByVersion(this.value)"> 
+				<option value="1">12/10/2016</option>
+				<option value="1">13/10/2016</option>
+				<option value="1">14/10/2016</option>
+			</select>
+	    </div>
+	  </div>
+	  <div class="divider"><h5 class="page-header"></h5></div>
+</div>
+
+
+<div class="row">
    <div class="col-sm-6 col-md-4">
       <div class="thumbnail">
-         <img src="http://www.javabeat.net/wp-content/uploads/2014/03/amazing-300x214.jpg"
-          alt="Index response time distribution">
+         <img src="http://www.javabeat.net/wp-content/uploads/2014/03/amazing-300x214.jpg" alt="Master response time distribution">
       </div>
-      <h4>Index Response</h4>
+      <h4>Master Response</h4>
       <div class="caption">
       	<table class="table">
 		  <tbody>
@@ -21,33 +56,50 @@
 		      <td>Average response</td>
 		      <td>30 ms</td>
 		    <tr class="danger">
-		      <td>Failure Rate</td>
+		      <td>Request Failure Rate</td>
 		      <td>0.0%</td>
 		     </tr>
 		  </tbody>
 		</table>
-      
-         <p>
-         <a href="#" class="btn btn-primary" role="button">Distribution Details</a>
-         </p>
+        <p><a href="#" class="btn btn-primary" role="button" onclick="alert("show distribution details info")">Distribution Details</a></p>
       </div>
    </div>
    <div class="col-sm-6 col-md-4">
       <div class="thumbnail">
-         <img src="http://www.javabeat.net/wp-content/uploads/2014/05/dummy_image2-300x300.jpg"
-            alt="my_image1">
+         <img src="http://www.javabeat.net/wp-content/uploads/2014/05/dummy_image2-300x300.jpg" alt="Playlist response time distribution">
       </div>
+      <h4>Master Response</h4>
       <div class="caption">
-	      <h3>Second Image</h3>
-	      <p>The Bootstrap is most popular front end framework for creating websites and web applications.
-	  	  Bootstrap is a powerful front end framework which makes faster and easier web development.</p>
-	  	  <p><a href="#" class="btn btn-primary" role="button">View</a>
-	  	  <a href="#" class="btn btn-success" role="button">Download</a></p>
+      	<table class="table">
+		  <tbody>
+		    <tr class="active">
+		      <td>Average response</td>
+		      <td>30 ms</td>
+		    <tr class="danger">
+		      <td>Request Failure Rate</td>
+		      <td>0.0%</td>
+		    </tr>
+		    <tr class="danger">
+		      <td>Response Validation Failure Rate</td>
+		      <td>0.0%</td>
+		    </tr>
+		  </tbody>
+		</table>
+        <p>
+        	<a href="#" class="btn btn-primary" role="button" onclick="alert("show distribution details info")">Distribution Details</a>
+        	<a href="#" class="btn btn-danger" role="button" onclick="alert("show validation failed in media playlist response")">Validation Failure</a>
+        </p>
       </div>
+      
+      
    </div>
    <div class="col-sm-6 col-md-4">
       <div class="caption">
 	  	  <table class="table">
+	  	  <colgroup>
+			<col style="width:60%">
+			<col style="width:40%">
+			</colgroup>
 		  <thead>
 		    <tr>
 		      <th>Test Environment</th>
@@ -56,57 +108,70 @@
 		  </thead>
 		  <tbody>
 		    <tr class="active">
-		      <td>Version</td>
+		      <td>Project Version</td>
 		      <td>VEX-2.8-ER2</td>
+		    </tr>
 		    <tr class="success">
 		      <td>Type</td>
 		      <td>VOD_T6</td>
+		    </tr>
 		    <tr class="warning">
 		      <td>Date</td>
 		      <td>20/10/2013</td>
+		    </tr>
 		    <tr class="danger">
-		      <td>Concurrent</td>
+		      <td>Concurrent Session</td>
 		      <td>100</td>
 		     </tr>
 		  </tbody>
 		</table>
 		<p />
 		<table class="table">
+			<colgroup>
+			<col style="width:60%">
+			<col style="width:40%">
+			</colgroup>
 		    <thead>
 			    <tr>
-			      <th>Test Environment</th>
+			      <th>Test Scenario</th>
 			      <th></th>
 			     </tr>
 			  </thead>
 		    <tbody>
 		      <tr class="active">
-		        <td>SAP Required</td>
-		        <td>True</td>
-		      </tr>
-		      <tr class="active">
 		        <td>Asset Number</td>
 		        <td>15000</td>
 		      </tr>
-		      <tr class="active">
+		      <tr class="warning">
 		        <td>Media Request Number</td>
 		        <td>3</td>
 		      </tr>
 		      <tr class="active">
 		        <td>Master Size</td>
+		        <td>10k</td>
+		      </tr>
+		      <tr class="warning">
+		        <td>Media Playlist Size</td>
 		        <td>150k</td>
 		      </tr>
 		      <tr class="active">
-		        <td>Media Playlist Size</td>
-		        <td>150k</td>
+		        <td>Media Playlist Size(Merged)</td>
+		        <td>300k</td>
+		      </tr>
+		      <tr class="warning">
+		        <td>SAP</td>
+		        <td>Required</td>
 		      </tr>
 		    </tbody>
 		 </table>
 		
 		 <p>
-         	<a href="#" class="btn btn-success" role="button">Download Test Profile</a>
+         	<!--<a href="#" class="btn btn-success" role="button">Download Test Profile</a>-->
          </p>
       </div>
+      
    </div>
 </div>
+<div class="divider"><h5 class="page-header"></h5></div>
 
 {% endblock%}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- title>{{ website_title }}</title -->
-    <title>VEX Results dd</title>
+    <title>VEX Performance Test</title>
     <link rel="shortcut icon" href="/static/img/favicon.ico"/>
     <link rel="bookmark" href="/static/img/favicon.ico"/>
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -21,13 +21,13 @@
 	
 	{% block header %}  {% endblock%}
     {% block css%}  {% endblock%}
-    
+
 </head>
 <body id="loadtestContent">
-    <!-- 导航栏 -->
+    <!-- Nav bar -->
     {% include "./perf_ui/include/nav.html"%}
     <p>&nbsp</p><p>&nbsp</p>
-    <!-- 内容列表 -->
+    <!-- Contents -->
     <div id="loadtest-main" class="container">
         {%block main%}This in main page{% endblock %}
     </div>
