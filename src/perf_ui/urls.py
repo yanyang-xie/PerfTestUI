@@ -10,6 +10,6 @@ urlpatterns = patterns('perf_ui.views',
     url(r'^result/t6cdvr$', 'result_cdvr_t6', name='result_cdvr_t6_index'),
 )
 
-urlpatterns += patterns('perf_ui.views',
-    url(r'^about', 'about', name='about'),
-)
+#urlpatterns += patterns('perf_ui.views',
+#    url(r'^about', 'about', name='about'),
+#)
