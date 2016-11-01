@@ -55,11 +55,11 @@ def get_test_project_json_list():
 
 def get_test_version_json_list(test_type, project_name=None):
     if project_name is not None:
-        project_version_list = LoadTestResult.objects.filter(project_name=project_name, test_type=test_type).values("project_version").distinct()
+        results = LoadTestResult.objects.filter(project_name=project_name, test_type=test_type).values("project_version").distinct()
     else:
-        project_version_list = LoadTestResult.objects.filter(test_type=test_type).values_list("project_version").distinct()
+        results = LoadTestResult.objects.filter(test_type=test_type).values_list("project_version").distinct()
     
-    return [{"id": str(version[0]), "name":str(version[0])} for version in project_version_list]
+    return [{"id": str(result['project_version']), "name":str(result['project_version'])} for result in results]
 
 def get_test_date_json_list(test_type, project_name=None, project_version=None):
     test_result_list = LoadTestResult.objects.filter(test_type=test_type)

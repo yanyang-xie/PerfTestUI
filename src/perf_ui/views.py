@@ -38,13 +38,6 @@ def result_cdvr_t6(request):
 
 # show load test result for one test type
 def _generate_result_context(request, test_type):
-    context = {'test_type': test_type,
-               'test_type_list': get_test_type_json_list(),
-               'test_project_list': get_test_project_json_list(),
-               'test_version_list':get_test_version_json_list(test_type),
-               'test_date_list': get_test_date_json_list(test_type),
-               }
-    
     load_test_results = LoadTestResult.objects.filter(test_type=test_type);
     if request.GET.has_key('project_name'):
         project_name = request.GET.get('project_name')
@@ -54,14 +47,20 @@ def _generate_result_context(request, test_type):
         project_version = request.GET.get('project_version')
         load_test_results = load_test_results.filter(project_version=project_version)
     
-    if len(load_test_results) == 0:
-        return render(request, 'loadtest/testResults.html', context)
+    test_result = load_test_results[0]
     
-    context.update({'test_version_list': get_test_version_json_list(test_type),})
-    latest_test_result = load_test_results[0]
-    
-    context.update(_generate_context(latest_test_result))
-    context.update(_get_vod_test_scenario(latest_test_result))
+    context = {}
+    context.update({'test_type': test_type,
+               'selected_project_name':test_result.project_name,
+               'selected_project_version':test_result.project_name,    
+               'selected_result_id':test_result.id,     
+               'test_type_list': get_test_type_json_list(),
+               'test_project_list': get_test_project_json_list(),
+               'test_version_list':get_test_version_json_list(test_type, test_result.project_name),
+               'test_date_list': get_test_date_json_list(test_type, test_result.project_name, test_result.project_version),
+               })
+    context.update(_generate_context(test_result))
+    context.update(_get_vod_test_scenario(test_result))
     return context
     
 def _generate_context(test_result):

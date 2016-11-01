@@ -1,21 +1,24 @@
 {% extends "./perf_ui/base.html" %}
 
 {% block header %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/i18n/defaults-*.min.js"></script>
 
 <script>
-	
-	$(window).on('load', function () {
+	AmCharts.ready(function () {
+        alert("am1");
     });
+	
+	//$(window).on('load', function () {
+	//	alert("1234");
+	//	$("#load_test_project_list").val("{{ selected_project_name }}");
+	//	$("#load_test_version_list").val("{{ selected_project_version }}");
+    //    $("#load_test_date_list").val("{{ selected_result_id }}");
+    //});
 });
 
 </script>
 {% endblock%}
 
 {% block main %}
-
 <div class="row">
 	<div class="form-group">
 	 	<div class="col-sm-6 col-md-4">
@@ -50,7 +53,6 @@
 	  </div>
     <div class="divider"><h5 class="page-header"></h5></div>
 </div>
-
 
 <div class="row">
    <div class="col-sm-6 col-md-4">
