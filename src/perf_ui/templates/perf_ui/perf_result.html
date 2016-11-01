@@ -25,7 +25,15 @@
 {% endblock%}
 
 {% block main %}
-	<div class="row">
+
+{% if no_result %}
+<div class="row">
+	<form role="form">
+		<span class="help-block">No performance test result for {{ test_type }}</span>
+	</form>
+</div>
+{% else %}
+<div class="row">
 	<div class="form-group">
 	 	<div class="col-sm-6 col-md-4">
 	      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_project_list" onChange="getRecentlyLoadTestResultByProject(this.value)"> 
@@ -194,4 +202,5 @@
    </div>
 </div>
 <div class="divider"><h5 class="page-header"></h5></div>
+{% endif %}
 {% endblock%}

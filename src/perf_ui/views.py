@@ -5,12 +5,13 @@ import logging
 
 from django.shortcuts import render_to_response, render
 
+from perf_ui.model.armchart import generate_vex_am_serial_chart_info
 from perf_ui.model.result_parser import VEXPerfTestResult
 from perf_ui.models import LoadTestResult, get_test_type_json_list, \
     get_test_version_json_list, get_test_project_json_list, \
     get_test_date_json_list
-from perf_ui.util import get_test_content_number
-from perf_ui.model.armchart import generate_vex_am_serial_chart_info
+from perf_ui.utility.common_util import get_test_content_number
+
 
 logger = logging.getLogger(__name__)
 
@@ -23,16 +24,10 @@ def page_error(request):
 def index(request):
     return render(request, 'perf_ui/base.html')
 
-def result_vod_t6(request):
-    context = _generate_result_context(request, 'VOD_T6')
+def show_perf_result(request, test_type):
+    context = _generate_result_context(request, test_type)
     logger.debug("Context is: %s", context)
-    return render(request, 'perf_ui/vod-t6-index.html', context=context)
-
-def result_linear_t6(request):
-    return render(request, 'perf_ui/linear-t6-index.html')
-
-def result_cdvr_t6(request):
-    return render(request, 'perf_ui/cdvr-t6-index.html')
+    return render(request, 'perf_ui/perf_result.html', context=context)
 
 # show load test result for one test type
 def _generate_result_context(request, test_type):
@@ -45,20 +40,23 @@ def _generate_result_context(request, test_type):
         project_version = request.GET.get('project_version')
         load_test_results = load_test_results.filter(project_version=project_version)
     
-    test_result = load_test_results[0]
-    
-    context = {}
-    context.update({'test_type': test_type,
-               'selected_project_name':test_result.project_name,
-               'selected_project_version':test_result.project_version,    
-               'selected_result_id':test_result.id,     
-               'test_type_list': get_test_type_json_list(),
-               'test_project_list': get_test_project_json_list(),
-               'test_version_list':get_test_version_json_list(test_type, test_result.project_name),
-               'test_date_list': get_test_date_json_list(test_type, test_result.project_name, test_result.project_version),
-               })
-    context.update(_generate_context(test_result))
-    context.update(_get_vod_test_scenario(test_result))
+    context = {'test_type': test_type,}
+    if load_test_results.count() > 0:
+        test_result = load_test_results[0]
+        context.update({
+                    'no_result': False,
+                    'selected_project_name':test_result.project_name,
+                    'selected_project_version':test_result.project_version,    
+                    'selected_result_id':test_result.id,     
+                    'test_type_list': get_test_type_json_list(),
+                    'test_project_list': get_test_project_json_list(),
+                    'test_version_list':get_test_version_json_list(test_type, test_result.project_name),
+                    'test_date_list': get_test_date_json_list(test_type, test_result.project_name, test_result.project_version),
+                   })
+        context.update(_generate_context(test_result))
+        context.update(_get_vod_test_scenario(test_result))
+    else:
+        context.update({'no_result': True})
     return context
     
 def _generate_context(test_result):
