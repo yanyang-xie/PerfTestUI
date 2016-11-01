@@ -17,30 +17,38 @@
 {% block main %}
 
 <div class="row">
-	 <div class="form-group">
+	<div class="form-group">
 	 	<div class="col-sm-6 col-md-4">
-	      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_version_list" onChange="getRecentlyLoadTestResultByVersion(this.value)"> 
-				<option value="1">VEX Core</option>
-				<option value="1">VEX FE</option>
-			</select>
+	      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_project_list" onChange="getRecentlyLoadTestResultByProject(this.value)"> 
+			{% if test_project_list %}
+				{% for test_project in test_project_list %}
+					<option value="{{ test_project.id }}">{{test_project.name}}</option>
+				{% endfor %}
+			{% endif %}
+		  </select>
 	    </div>
 	    
 	    <div class="col-sm-6 col-md-4">
 	      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_version_list" onChange="getRecentlyLoadTestResultByVersion(this.value)"> 
-				<option value="1">VEX-2.8.0-RC1</option>
-				<option value="1">VEX-2.8.0-RC2</option>
-			</select>
+			{% if test_version_list %}
+				{% for test_version in test_version_list %}
+					<option value="{{ test_version.id }}">{{test_version.name}}</option>
+				{% endfor %}
+			{% endif %}
+		  </select>
 	    </div>
 	    
 	    <div class="col-sm-6 col-md-4">
 	      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_version_list" onChange="getRecentlyLoadTestResultByVersion(this.value)"> 
-				<option value="1">12/10/2016</option>
-				<option value="1">13/10/2016</option>
-				<option value="1">14/10/2016</option>
-			</select>
+			{% if test_date_list %}
+				{% for test_date in test_date_list %}
+					<option value="{{ test_date.id }}">{{test_date.name}}</option>
+				{% endfor %}
+			{% endif %}
+		  </select>
 	    </div>
 	  </div>
-	  <div class="divider"><h5 class="page-header"></h5></div>
+    <div class="divider"><h5 class="page-header"></h5></div>
 </div>
 
 
