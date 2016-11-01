@@ -6,8 +6,8 @@ serial_chart_category_field_tag = 'ResponseTime'
 serial_chart_graph_value_field_tag = 'Client'
 serial_chart_graph_color_field_tag = 'color'
 
-serial_chart_category_axis_title = 'client response time distribution'
-serial_chart_value_axis_titile = 'client number of response time'
+serial_chart_category_axis_title = 'Response Time Distribution'
+serial_chart_value_axis_titile = 'Client Number'
 
 class AmSerialChartColumn():
     def __init__(self, category_field_value, graph_value_field_vlaue, graph_color_field_value=''):
@@ -15,7 +15,6 @@ class AmSerialChartColumn():
                                   serial_chart_graph_value_field_tag: graph_value_field_vlaue,
                                   serial_chart_graph_color_field_tag: graph_color_field_value,
                                   }
-    
     
     def __repr__(self):
         return str(self.chart_column_dict)
