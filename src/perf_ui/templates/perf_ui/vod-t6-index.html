@@ -6,14 +6,13 @@
 		var index_am_data = {{ index_am_data |safe }};
 		var bitrate_am_data = {{ bitrate_am_data |safe }};
 		
-		//var serial_chart_category_field = "{{ serial_chart_category_field }}";
-		//var serial_chart_category_axis_title = "{{ serial_chart_category_axis_title }}";
-		//var serial_chart_value_axis_titile = "{{ serial_chart_value_axis_titile }}";
-		//var serial_chart_graph_color_field = "{{ serial_chart_graph_color_field }}";
-		//var serial_chart_graph_value_field = "{{ serial_chart_graph_value_field }}";
-		
-		drawAmCharts(index_am_data, "indexChart");
-		drawAmCharts(bitrate_am_data, "bitrateChart");
+		var category_field = "{{ serial_chart_category_field }}";
+		var category_axis_title = "{{ serial_chart_category_axis_title }}";
+		var value_axis_titile = "{{ serial_chart_value_axis_titile }}";
+		var graph_color_field = "{{ serial_chart_graph_color_field }}";
+		var graph_value_field = "{{ serial_chart_graph_value_field }}";
+		drawAmCharts("indexChart", index_am_data,  category_field, category_axis_title, value_axis_titile, graph_color_field, graph_value_field);
+		drawAmCharts("bitrateChart", bitrate_am_data, category_field, category_axis_title, value_axis_titile, graph_color_field, graph_value_field);
 		
     });
     
