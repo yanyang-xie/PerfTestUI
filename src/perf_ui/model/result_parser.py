@@ -13,7 +13,7 @@ class VEXPerfTestResult():
         self.test_duration = 1
         self.request_total = 1
         self.request_concurrent = 1
-        self.request_succeed_rate_tag = '100.00%'
+        self.request_succeed_rate = '100.00%'
         self.response_average_time = 1
         self.response_failure = 1
         self.response_time_distribution_list = []
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     print r.test_duration
     print r.request_total
     print r.request_concurrent
-    print r.request_succeed_rate_tag
+    print r.request_succeed_rate
     print r.response_average_time
     print r.response_failure
     print r.response_time_distribution_list

@@ -1,10 +1,15 @@
+# -*- coding=utf-8 -*-
+# author: yanyang.xie@gmail.com
+
 import logging
-import string
 
 from django.shortcuts import render_to_response, render
 
+from perf_ui.model.result_parser import VEXPerfTestResult
 from perf_ui.models import LoadTestResult, get_test_type_json_list, \
-    get_test_version_json_list, get_test_project_json_list
+    get_test_version_json_list, get_test_project_json_list, \
+    get_test_date_json_list
+from perf_ui.util import get_test_content_number
 
 
 logger = logging.getLogger(__name__)
@@ -19,7 +24,11 @@ def index(request):
     return render(request, 'perf_ui/base.html')
 
 def result_vod_t6(request):
-    return render(request, 'perf_ui/vod-t6-index.html')
+    context = _generate_result_context(request, 'VOD_T6')
+    logger.debug("Context is: %s", context)
+    print context
+
+    return render(request, 'perf_ui/vod-t6-index.html', context=context)
 
 def result_linear_t6(request):
     return render(request, 'perf_ui/linear-t6-index.html')
@@ -28,98 +37,94 @@ def result_cdvr_t6(request):
     return render(request, 'perf_ui/cdvr-t6-index.html')
 
 # show load test result for one test type
-def show_latest_test_results(request, test_type, max=10):
-    context = {'selected_test_type': test_type, 'test_type_list': get_test_type_json_list(), 'test_project_list': get_test_project_json_list(),}
+def _generate_result_context(request, test_type):
+    context = {'selected_test_type': test_type,
+               'test_type_list': get_test_type_json_list(),
+               'test_project_list': get_test_project_json_list(),
+               'test_version_list':get_test_version_json_list(test_type),
+               'test_date_list': get_test_date_json_list(test_type),
+               }
     
     load_test_results = LoadTestResult.objects.filter(test_type=test_type);
+    if request.GET.has_key('project_name'):
+        project_name = request.GET.get('project_name')
+        load_test_results = load_test_results.filter(project_name=project_name)
+    
+    if request.GET.has_key('project_version'):
+        project_version = request.GET.get('project_version')
+        load_test_results = load_test_results.filter(project_version=project_version)
+    
     if len(load_test_results) == 0:
         return render(request, 'loadtest/testResults.html', context)
     
     context.update({'test_version_list': get_test_version_json_list(test_type),})
     latest_test_result = load_test_results[0]
     
+    context.update(_generate_context(latest_test_result))
+    context.update(_get_vod_test_scenario(latest_test_result))
+    return context
     
+def _generate_context(test_result):
+    result_context = {}
+    result_context.update(test_result.as_dict())
     
-    '''
-    if len(load_test_results) > 0:
-        latest_load_test_result = load_test_results[0]
-        index_results = _get_armcharts_column_list(latest_load_test_result.test_result_index)
-        bitrate_results = _get_armcharts_column_list(latest_load_test_result.test_result_bitrate)
+    test_config_dict = eval(test_result.test_config)
+    check_percent = 1.00 
+    if test_config_dict.has_key('client.response.check.percent'):
+        check_percent = float(test_config_dict.get('client.response.check.percent'))
         
-        index_benchmark_summary = _get_benchmark_number(latest_load_test_result.test_result_index, '_index')
-        bitrate_benchmark_summary = _get_benchmark_number(latest_load_test_result.test_result_bitrate, '_bitrate')
+    index_perf_result = VEXPerfTestResult(test_result.index_summary)
+    result_context['request_concurrent'] = (index_perf_result.request_concurrent + 1 ) / test_result.instance_number
+    result_context.update({'index_response_average_response': index_perf_result.response_average_time,
+                    'index_request_succeed_rate':index_perf_result.request_succeed_rate,
+                    })
         
-        context.update({'load_test_results':load_test_results,
-                        'selected_test_id': latest_load_test_result.id,
-                        'selected_test_module':latest_load_test_result.test_module,
-                        'selected_test_version':latest_load_test_result.test_version,
-                       'index_result_json': json.dumps(index_results),
-                       'bitrate_result_json': json.dumps(bitrate_results),
-                       })
-        context.update(latest_load_test_result.as_dict())
-        context.update(index_benchmark_summary)
-        context.update(bitrate_benchmark_summary)
-        
-    logger.debug("Context is: %s", context)
-    return render(request, 'loadtest/testResults.html', context)
-    '''
+    bitrate_perf_result = VEXPerfTestResult(test_result.index_summary)
+    result_context.update({'bitrate_response_average_response': bitrate_perf_result.response_average_time,
+                    'bitrate_request_succeed_rate':bitrate_perf_result.request_succeed_rate,
+                    'bitrate_response_failure_rate': round((float(bitrate_perf_result.response_failure)/check_percent/ bitrate_perf_result.request_total) * 100, 2)
+                    })
+    return result_context
+    
+def _get_vod_test_scenario(test_result):
+    test_config_dict = eval(test_result.test_config)
+    
+    test_scenario_dict = {}
+    if test_config_dict.has_key('test.case.content.names'):
+        content_names = test_config_dict.get('test.case.content.names').split('_')[-1]
+        test_scenario_dict['asset_number'] = get_test_content_number(content_names)
+    else:
+        test_scenario_dict['asset_number'] = 0
+    
+    if test_config_dict.has_key('test.bitrate.request.number'):
+        test_scenario_dict['media_request_number'] = test_config_dict.get('test.bitrate.request.number')
+    else:
+        test_scenario_dict['media_request_number'] = 1
+    
+    if test_config_dict.has_key('test.index.asset.content.size'):
+        test_scenario_dict['master_content_size'] = test_config_dict.get('test.index.asset.content.size')
+    else:
+        test_scenario_dict['master_content_size'] = '10k'
+    
+    if test_config_dict.has_key('test.bitrate.asset.content.size'):
+        test_scenario_dict['media_playlist_content_size'] = test_config_dict.get('test.bitrate.asset.content.size')
+    else:
+        test_scenario_dict['media_playlist_content_size'] = '150k'
+    
+    if test_config_dict.has_key('test.bitrate.asset.content.size.merged'):
+        test_scenario_dict['merged_media_playlist_content_size'] = test_config_dict.get('test.bitrate.asset.content.size.merged')
+    else:
+        test_scenario_dict['merged_media_playlist_content_size'] = '300k'
+    
+    if test_config_dict.has_key('test.require.sap'):
+        test_scenario_dict['sap_required'] = test_config_dict.get('test.require.sap')
+    else:
+        test_scenario_dict['sap_required'] = 'False'
+    
+    return test_scenario_dict
 
-# 
-def _get_armcharts_column_list(benchmark_result):
-    color_list = ['#CD0D74', '#8A0CCF', ]
-    
-    time_distribute_tmp_dict = {}
-    time_distribute_armchart_info_dict = {}
-    
-    for line in benchmark_result.split('\n'):
-        if string.strip(line) == '':
-            continue
-        
-        if line.find('millisecond') < 0:
-            continue
-        
-        time_tag, client_number = line.split(':')
-        time_tag = time_tag.replace('millisecond', '').strip()
-        client_number = client_number.replace('\r', ' ').strip()
-        
-        time_distribute_key = int(time_tag.split('-')[0].strip())
-        time_distribute_tmp_dict[time_distribute_key] = time_tag
-        
-        converted_dict = {}
-        converted_dict['ResponseTime'] = time_tag
-        converted_dict['Client']=client_number
-        time_distribute_armchart_info_dict[time_tag]=converted_dict
-    
-    keys = time_distribute_tmp_dict.keys()
-    keys.sort()
-    convert_column_list = []
-    for i, key in enumerate(keys):
-        armchart_info_dict = time_distribute_armchart_info_dict.get(time_distribute_tmp_dict.get(key))
-        armchart_info_dict['color'] = color_list[i%len(color_list)]
-        convert_column_list.append(armchart_info_dict)
-        
-    return convert_column_list
+def _get_linear_test_scenario(test_result):
+    return {}
 
-
-if __name__ == '__main__':
-    t = '''
-    Index response summary
-      Test Duration (second): 300
-      Request concurrent    : 95
-      Request In Total      : 28635
-      Request Succeed       : 28635
-      Request Failure       : 0
-      Request Succeed Rate  : 100.00%
-      Response Average Time : 27
-      Response Failure      : 0
-      Response Time Distribution
-          0-200      millisecond: 28587
-          200-500    millisecond: 0
-          500-1000   millisecond: 48
-          1000-2000  millisecond: 0
-          2000-3000  millisecond: 0
-          3000-6000  millisecond: 0
-          6000-12000 millisecond: 0
-    '''
-    
-    print _get_armcharts_column_list(t)
+def _get_cdvr_test_scenario(test_result):
+    return {}
