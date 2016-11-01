@@ -12,7 +12,6 @@ from perf_ui.models import LoadTestResult, get_test_type_json_list, \
     get_test_date_json_list
 from perf_ui.utility.common_util import get_test_content_number
 
-
 logger = logging.getLogger(__name__)
 
 def page_not_found(request):
@@ -24,13 +23,13 @@ def page_error(request):
 def index(request):
     return render(request, 'perf_ui/base.html')
 
+# show load test result for one test type
 def show_perf_result(request, test_type):
-    context = _generate_result_context(request, test_type)
+    context = _get_result_context(request, test_type)
     logger.debug("Context is: %s", context)
     return render(request, 'perf_ui/perf_result.html', context=context)
 
-# show load test result for one test type
-def _generate_result_context(request, test_type):
+def _get_result_context(request, test_type):
     load_test_results = LoadTestResult.objects.filter(test_type=test_type);
     if request.GET.has_key('project_name'):
         project_name = request.GET.get('project_name')
@@ -43,23 +42,25 @@ def _generate_result_context(request, test_type):
     context = {'test_type': test_type,}
     if load_test_results.count() > 0:
         test_result = load_test_results[0]
-        context.update({
-                    'no_result': False,
-                    'selected_project_name':test_result.project_name,
-                    'selected_project_version':test_result.project_version,    
-                    'selected_result_id':test_result.id,     
-                    'test_type_list': get_test_type_json_list(),
-                    'test_project_list': get_test_project_json_list(),
-                    'test_version_list':get_test_version_json_list(test_type, test_result.project_name),
-                    'test_date_list': get_test_date_json_list(test_type, test_result.project_name, test_result.project_version),
-                   })
-        context.update(_generate_context(test_result))
-        context.update(_get_vod_test_scenario(test_result))
+        context.update(
+                {
+                'no_result': False,
+                'selected_project_name':test_result.project_name,
+                'selected_project_version':test_result.project_version,   
+                'selected_result_id':test_result.id,     
+                'test_type_list': get_test_type_json_list(),
+                'test_project_list': get_test_project_json_list(),
+                'test_version_list':get_test_version_json_list(test_type, test_result.project_name),
+                'test_date_list': get_test_date_json_list(test_type, test_result.project_name, test_result.project_version),
+                })
+        context.update(_get_result_summary_context(test_result))
+        context.update(_get_test_scenario_context(test_result))
+        context.update(_get_result_error_details_context(test_result))
     else:
         context.update({'no_result': True})
     return context
     
-def _generate_context(test_result):
+def _get_result_summary_context(test_result):
     result_context = {}
     result_context.update(test_result.as_dict())
     
@@ -78,18 +79,35 @@ def _generate_context(test_result):
     response_failure_rate = (100 * float('%0.6f' %bitrate_perf_result.response_failure))/ check_percent/ bitrate_perf_result.request_total
     result_context.update({'bitrate_response_average_response': bitrate_perf_result.response_average_time,
                     'bitrate_request_succeed_rate':bitrate_perf_result.request_succeed_rate,
-                    'bitrate_response_success_rate': ('%0.2f' %(round(100 - response_failure_rate, 2))) + '%'
+                    'bitrate_response_success_rate': ('%0.2f' %(round(100 - response_failure_rate, 2))) + '%',
+                    'bitrate_response_error_details': test_result.error_details.strip(),
                     })
     
     index_am_chart_info, am_chart_defination = generate_vex_am_serial_chart_info(index_perf_result.response_time_distribution_list)
-    bitrate_am_chart_info, am_chart_defination = generate_vex_am_serial_chart_info(bitrate_perf_result.response_time_distribution_list)
+    bitrate_am_chart_info = generate_vex_am_serial_chart_info(bitrate_perf_result.response_time_distribution_list)[0]
     
     result_context.update(am_chart_defination)
     result_context.update({'index_am_data': index_am_chart_info, 'bitrate_am_data': bitrate_am_chart_info,})
     
     return result_context
+
+def _get_result_error_details_context(test_result):
+    errors = test_result.error_details
     
-def _get_vod_test_scenario(test_result):
+    error_dict = {}
+    for error_info in errors.split('\n'):
+        if error_info.strip() == '':
+            continue
+        
+        ip, error_msg = error_info.split(':')
+        error_dict[str(ip.strip())] = str(error_msg.strip())
+        
+        if len(error_dict) > 10:
+            break
+    
+    return {'error_dict': error_dict}
+
+def _get_test_scenario_context(test_result):
     test_config_dict = eval(test_result.test_config)
     
     test_scenario_dict = {}
@@ -125,10 +143,3 @@ def _get_vod_test_scenario(test_result):
         test_scenario_dict['sap_required'] = 'False'
     
     return test_scenario_dict
-
-def _get_linear_test_scenario(test_result):
-    return {}
-
-def _get_cdvr_test_scenario(test_result):
-    return {}
-

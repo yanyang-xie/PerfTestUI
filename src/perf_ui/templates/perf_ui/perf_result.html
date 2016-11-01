@@ -21,186 +21,229 @@
     	$("#load_test_version_list").val("{{ selected_project_version }}");
     	$("#load_test_date_list").val("{{ selected_result_id }}");
     });
+    
 </script>
+<style>
+    #myModal
+    {
+        top:15%;
+    }
+</style>
 {% endblock%}
 
 {% block main %}
-
 {% if no_result %}
-<div class="row">
-	<form role="form">
-		<span class="help-block">No performance test result for {{ test_type }}</span>
-	</form>
-</div>
+	<div class="row">
+		<p class="text-info lead">No performance test result for {{ test_type }}</p>
+	</div>
 {% else %}
-<div class="row">
-	<div class="form-group">
-	 	<div class="col-sm-6 col-md-4">
-	      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_project_list" onChange="getRecentlyLoadTestResultByProject(this.value)"> 
-			{% if test_project_list %}
-				{% for test_project in test_project_list %}
-					<option value="{{ test_project.id }}">{{test_project.name}}</option>
-				{% endfor %}
-			{% endif %}
-		  </select>
-	    </div>
-	    
-	    <div class="col-sm-6 col-md-4">
-	      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_version_list" onChange="getRecentlyLoadTestResultByVersion(this.value)"> 
-			{% if test_version_list %}
-				{% for test_version in test_version_list %}
-					<option value="{{ test_version.id }}">{{test_version.name}}</option>
-				{% endfor %}
-			{% endif %}
-		  </select>
-	    </div>
-	    
-	    <div class="col-sm-6 col-md-4">
-	      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_version_list" onChange="getRecentlyLoadTestResultByVersion(this.value)"> 
-			{% if test_date_list %}
-				{% for test_date in test_date_list %}
-					<option value="{{ test_date.id }}">{{test_date.name}}</option>
-				{% endfor %}
-			{% endif %}
-		  </select>
-	    </div>
-	  </div>
-    <div class="divider"><h5 class="page-header"></h5></div>
-</div>
-
-<div class="row">
-   <div class="col-sm-6 col-md-4">
-      <div id="indexChart" class="thumbnail" style="width: auto; height: 350px;"></div>
-      <h4>Master Response</h4>
-      <div class="caption">
-      	<table class="table">
-		  <tbody>
-		    <tr class="active">
-		      <td>Average response</td>
-		      <td>{{ index_response_average_response }} ms</td>
-		    <tr class="danger">
-		      <td>Request Success Rate</td>
-		      <td>{{ index_request_succeed_rate }}</td>
-		     </tr>
-		     <tr class="danger">
-		      <td>Response Validation Success Rate</td>
-		      <td>100.00%</td>
-		    </tr>
-		  </tbody>
-		</table>
-        <p><a href="#" class="btn btn-primary" role="button" onclick="alert("show distribution details info")">Distribution Details</a></p>
-      </div>
-   </div>
-   <div class="col-sm-6 col-md-4">
-   	  <div id="bitrateChart" class="thumbnail" style="width: auto; height: 350px;"></div>
-      <h4>Master Response</h4>
-      <div class="caption">
-      	<table class="table">
-		  <tbody>
-		    <tr class="active">
-		      <td>Average response</td>
-		      <td>{{ bitrate_response_average_response }} ms</td>
-		    <tr class="danger">
-		      <td>Request Success Rate</td>
-		      <td>{{ bitrate_request_succeed_rate }}</td>
-		    </tr>
-		    <tr class="danger">
-		      <td>Response Validation Success Rate</td>
-		      <td>{{ bitrate_response_success_rate }}</td>
-		    </tr>
-		  </tbody>
-		</table>
-        <p>
-        	<a href="#" class="btn btn-primary" role="button" onclick="alert("show distribution details info")">Distribution Details</a>
-        	<a href="#" class="btn btn-danger" role="button" onclick="alert("show validation failed in media playlist response")">Validation Failure</a>
-        </p>
-      </div>
-      
-      
-   </div>
-   <div class="col-sm-6 col-md-4">
-      <div class="caption">
-	  	  <table class="table">
-	  	  <colgroup>
-			<col style="width:60%">
-			<col style="width:40%">
-			</colgroup>
-		  <thead>
-		    <tr>
-		      <th>Test Environment</th>
-		      <th></th>
-		     </tr>
-		  </thead>
-		  <tbody>
-		    <tr class="active">
-		      <td>Project Name</td>
-		      <td>{{project_name}}</td>
-		    </tr>
-		    <tr class="success">
-		      <td>Project Version</td>
-		      <td>{{project_version}}</td>
-		    </tr>
-		    <tr class="danger">
-		      <td>Type</td>
-		      <td>{{ test_type }}</td>
-		    </tr>
-		    <tr class="warning">
-		      <td>Date</td>
-		      <td>{{ test_date }}</td>
-		    </tr>
-		    <tr class="active">
-		      <td>Concurrent Session</td>
-		      <td>{{ request_concurrent }}</td>
-		     </tr>
-		  </tbody>
-		</table>
-		<p />
-		<table class="table">
-			<colgroup>
-			<col style="width:60%">
-			<col style="width:40%">
-			</colgroup>
-		    <thead>
+	<div class="row">
+		<div class="form-group">
+		 	<div class="col-sm-6 col-md-4">
+		      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_project_list" onChange="getRecentlyLoadTestResultByProject(this.value)"> 
+				{% if test_project_list %}
+					{% for test_project in test_project_list %}
+						<option value="{{ test_project.id }}">{{test_project.name}}</option>
+					{% endfor %}
+				{% endif %}
+			  </select>
+		    </div>
+		    
+		    <div class="col-sm-6 col-md-4">
+		      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_version_list" onChange="getRecentlyLoadTestResultByVersion(this.value)"> 
+				{% if test_version_list %}
+					{% for test_version in test_version_list %}
+						<option value="{{ test_version.id }}">{{test_version.name}}</option>
+					{% endfor %}
+				{% endif %}
+			  </select>
+		    </div>
+		    
+		    <div class="col-sm-6 col-md-4">
+		      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_version_list" onChange="getRecentlyLoadTestResultByVersion(this.value)"> 
+				{% if test_date_list %}
+					{% for test_date in test_date_list %}
+						<option value="{{ test_date.id }}">{{test_date.name}}</option>
+					{% endfor %}
+				{% endif %}
+			  </select>
+		    </div>
+		  </div>
+	    <div class="divider"><h5 class="page-header"></h5></div>
+	</div>
+	
+	<div class="row">
+	   <div class="col-sm-6 col-md-4">
+	      <div id="indexChart" class="thumbnail" style="width: auto; height: 350px;"></div>
+	      <h4>Master Response</h4>
+	      <div class="caption">
+	      	<table class="table">
+			  <tbody>
+			    <tr class="active">
+			      <td>Average Response Time</td>
+			      <td>{{ index_response_average_response }} ms</td>
+			    <tr class="warning">
+			      <td>Request Success Rate</td>
+			      <td>{{ index_request_succeed_rate }}</td>
+			     </tr>
+			     <tr class="success">
+			      <td>Response Validation Success Rate</td>
+			      <td>100.00%</td>
+			    </tr>
+			  </tbody>
+			</table>
+	      </div>
+	   </div>
+	   <div class="col-sm-6 col-md-4">
+	   	  <div id="bitrateChart" class="thumbnail" style="width: auto; height: 350px;"></div>
+	      <h4>Media Playlist Response</h4>
+	      <div class="caption">
+	      	<table class="table">
+			  <tbody>
+			    <tr class="active">
+			      <td>Average Response Time</td>
+			      <td>{{ bitrate_response_average_response }} ms</td>
+			    <tr class="warning">
+			      <td>Request Success Rate</td>
+			      <td>{{ bitrate_request_succeed_rate }}</td>
+			    </tr>
+			    <tr class="success">
+			      <td>Response Validation Success Rate</td>
+			      <td>{{ bitrate_response_success_rate }}</td>
+			    </tr>
+			  </tbody>
+			</table>
+			{% if error_dict %}
+	        <p>
+	        	<!--<a href="#" class="btn btn-primary" role="button" onclick="alert("show distribution details info")">Distribution Details</a>-->
+	        	<button class="btn btn-danger" data-toggle="modal" data-target="#myModal">Response Failure Details</button>
+	        </p>
+	        {% endif %}
+	      </div>
+	      
+	      
+	   </div>
+	   <div class="col-sm-6 col-md-4">
+	      <div class="caption">
+		  	  <table class="table">
+		  	  <colgroup>
+				<col style="width:60%">
+				<col style="width:40%">
+				</colgroup>
+			  <thead>
 			    <tr>
-			      <th>Test Scenario</th>
+			      <th>Test Environment</th>
 			      <th></th>
 			     </tr>
 			  </thead>
-		    <tbody>
-		      <tr class="active">
-		        <td>Asset Number</td>
-		        <td>{{asset_number}}</td>
-		      </tr>
-		      <tr class="warning">
-		        <td>Media Request Number</td>
-		        <td>{{media_request_number}}</td>
-		      </tr>
-		      <tr class="active">
-		        <td>Master Size</td>
-		        <td>{{master_content_size}}</td>
-		      </tr>
-		      <tr class="warning">
-		        <td>Media Playlist Size</td>
-		        <td>{{media_playlist_content_size}}</td>
-		      </tr>
-		      <tr class="active">
-		        <td>Media Playlist Size(Merged)</td>
-		        <td>{{merged_media_playlist_content_size}}</td>
-		      </tr>
-		      <tr class="warning">
-		        <td>SAP Required</td>
-		        <td>{{ sap_required }}</td>
-		      </tr>
-		    </tbody>
-		 </table>
-		
-		 <p>
-         	<!--<a href="#" class="btn btn-success" role="button">Download Test Profile</a>-->
-         </p>
-      </div>
-      
-   </div>
-</div>
-<div class="divider"><h5 class="page-header"></h5></div>
+			  <tbody>
+			    <tr class="active">
+			      <td>Project Name</td>
+			      <td>{{project_name}}</td>
+			    </tr>
+			    <tr class="success">
+			      <td>Project Version</td>
+			      <td>{{project_version}}</td>
+			    </tr>
+			    <tr class="danger">
+			      <td>Type</td>
+			      <td>{{ test_type }}</td>
+			    </tr>
+			    <tr class="warning">
+			      <td>Date</td>
+			      <td>{{ test_date }}</td>
+			    </tr>
+			    <tr class="active">
+			      <td>Concurrent Session</td>
+			      <td>{{ request_concurrent }}</td>
+			     </tr>
+			  </tbody>
+			</table>
+			<p />
+			<table class="table">
+				<colgroup>
+				<col style="width:60%">
+				<col style="width:40%">
+				</colgroup>
+			    <thead>
+				    <tr>
+				      <th>Test Scenario</th>
+				      <th></th>
+				     </tr>
+				  </thead>
+			    <tbody>
+			      <tr class="active">
+			        <td>Asset Number</td>
+			        <td>{{asset_number}}</td>
+			      </tr>
+			      <tr class="warning">
+			        <td>Media Request Number</td>
+			        <td>{{media_request_number}}</td>
+			      </tr>
+			      <tr class="active">
+			        <td>Master Size</td>
+			        <td>{{master_content_size}}</td>
+			      </tr>
+			      <tr class="warning">
+			        <td>Media Playlist Size</td>
+			        <td>{{media_playlist_content_size}}</td>
+			      </tr>
+			      <tr class="active">
+			        <td>Media Playlist Size(Merged)</td>
+			        <td>{{merged_media_playlist_content_size}}</td>
+			      </tr>
+			      <tr class="warning">
+			        <td>SAP Required</td>
+			        <td>{{ sap_required }}</td>
+			      </tr>
+			    </tbody>
+			 </table>
+			
+			 <p>
+	         	<!--<a href="#" class="btn btn-success" role="button">Download Test Profile</a>-->
+	         </p>
+	      </div>
+	   </div>
+	</div>
+
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-dialog" style="width:800px;">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="myModalLabel">Response Failure Details</h4>
+	            </div>
+	            <div class="modal-body">
+	            	<table class="table">
+				  	  <colgroup>
+						<col style="width:20%">
+						<col style="width:80%">
+						</colgroup>
+					  <thead>
+					    <tr>
+					      <th>Client IP</th>
+					      <th>Error Details</th>
+					     </tr>
+					  </thead>
+					  {% for ip, error_info in error_dict.items %}
+					  	 {% if forloop.counter|divisibleby:"2" %} 
+						  	 <tr class="active">
+						 {%else%}
+						  	 <tr class="success">
+						 {%endif%}
+								  <td>{{ ip }}</td>
+								  <td>{{ error_info }}</td>
+							  </tr>
+					   {% endfor%}
+					</table>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	            </div>
+	        </div><!-- /.modal-content -->
+	    </div><!-- /.modal -->
+	</div>
+	<div class="divider"><h5 class="page-header"></h5></div>
 {% endif %}
 {% endblock%}
