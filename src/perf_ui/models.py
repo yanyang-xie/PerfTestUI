@@ -55,11 +55,10 @@ def get_test_project_json_list():
 
 def get_test_version_json_list(test_type, project_name=None):
     if project_name is not None:
-        results = LoadTestResult.objects.filter(project_name=project_name, test_type=test_type).values("project_version").distinct()
+        result_list = LoadTestResult.objects.filter(project_name=project_name, test_type=test_type).values_list("project_version").distinct()
     else:
-        results = LoadTestResult.objects.filter(test_type=test_type).values_list("project_version").distinct()
-    
-    return [{"id": str(result['project_version']), "name":str(result['project_version'])} for result in results]
+        result_list = LoadTestResult.objects.filter(test_type=test_type).values_list("project_version").distinct()
+    return [{"id": str(result[0]), "name":str(result[0])} for result in set(result_list)]
 
 def get_test_date_json_list(test_type, project_name=None, project_version=None):
     test_result_list = LoadTestResult.objects.filter(test_type=test_type)
@@ -71,4 +70,3 @@ def get_test_date_json_list(test_type, project_name=None, project_version=None):
     
     test_result_list = test_result_list.values("id", "test_date").distinct()
     return [{"id": str(result["id"]), "name":result["test_date"].strftime('%m/%d/%Y')} for result in test_result_list]
-

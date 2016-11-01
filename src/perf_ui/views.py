@@ -31,6 +31,7 @@ def show_perf_result(request, test_type):
 
 def _get_result_context(request, test_type):
     load_test_results = LoadTestResult.objects.filter(test_type=test_type);
+    
     if request.GET.has_key('project_name'):
         project_name = request.GET.get('project_name')
         load_test_results = load_test_results.filter(project_name=project_name)
@@ -41,7 +42,10 @@ def _get_result_context(request, test_type):
     
     context = {'test_type': test_type,}
     if load_test_results.count() > 0:
-        test_result = load_test_results[0]
+        if request.GET.has_key('test_result_id'):
+            test_result = LoadTestResult.objects.get(id=int(request.GET.get('test_result_id')));
+        else:
+            test_result = load_test_results[0]
         context.update(
                 {
                 'no_result': False,
@@ -102,7 +106,7 @@ def _get_result_error_details_context(test_result):
         ip, error_msg = error_info.split(':')
         error_dict[str(ip.strip())] = str(error_msg.strip())
         
-        if len(error_dict) > 10:
+        if len(error_dict) >= 10:
             break
     
     return {'error_dict': error_dict}

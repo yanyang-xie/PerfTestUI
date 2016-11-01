@@ -22,6 +22,25 @@
     	$("#load_test_date_list").val("{{ selected_result_id }}");
     });
     
+    function getRecentlyLoadTestResultByProject(project_name){
+    	var test_type = "{{ test_type }}";
+    	var url = "/result/" + test_type + "?project_name=" + project_name;
+    	window.location = url;
+    }
+    
+    function getRecentlyLoadTestResultByVersion(project_version){
+    	var test_type = "{{ test_type }}";
+    	var project_name = $("#load_test_project_list").val();
+    	var url = "/result/" + test_type + "?project_name=" + project_name + "&project_version=" + project_version;
+    	window.location = url;
+    }
+    
+    function getRecentlyLoadTestResultById(test_result_id){
+    	var test_type = "{{ test_type }}";
+    	var url = "/result/" + test_type + "?test_result_id=" + test_result_id;
+    	window.location = url;
+    }
+    
 </script>
 <style>
     #myModal
@@ -60,7 +79,7 @@
 		    </div>
 		    
 		    <div class="col-sm-6 col-md-4">
-		      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_version_list" onChange="getRecentlyLoadTestResultByVersion(this.value)"> 
+		      <select class= "form-control text-right selectpicker" name="load_test_date_list" id="load_test_date_list" onChange="getRecentlyLoadTestResultById(this.value)"> 
 				{% if test_date_list %}
 					{% for test_date in test_date_list %}
 						<option value="{{ test_date.id }}">{{test_date.name}}</option>
