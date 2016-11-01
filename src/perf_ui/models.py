@@ -3,7 +3,7 @@ from django.db import models
 from perf_ui.util import get_current_day_start_date
 
 # choices = ['value', 'display name']
-CHOICES_PROJECT = [('Core', 'VEX-Core'), ('FE', 'VEX-Frontend')]
+CHOICES_PROJECT = [('VEX-Core', 'VEX-Core'), ('VEX-Frontend', 'VEX-Frontend')]
 CHOICES_TYPE = [('VOD_T6', 'T6VOD'), ('CDVR_T6', 'CDVR_T6'), ('LINEAR_T6', 'LINEAR_T6')]
 
 class LoadTestResult(models.Model):

@@ -55,10 +55,10 @@
 		  <tbody>
 		    <tr class="active">
 		      <td>Average response</td>
-		      <td>30 ms</td>
+		      <td>{{ index_response_average_response }} ms</td>
 		    <tr class="danger">
-		      <td>Request Failure Rate</td>
-		      <td>0.0%</td>
+		      <td>Request Success Rate</td>
+		      <td>{{ index_request_succeed_rate }}</td>
 		     </tr>
 		  </tbody>
 		</table>
@@ -75,14 +75,14 @@
 		  <tbody>
 		    <tr class="active">
 		      <td>Average response</td>
-		      <td>30 ms</td>
+		      <td>{{ bitrate_response_average_response }} ms</td>
 		    <tr class="danger">
-		      <td>Request Failure Rate</td>
-		      <td>0.0%</td>
+		      <td>Request Success Rate</td>
+		      <td>{{ bitrate_request_succeed_rate }}</td>
 		    </tr>
 		    <tr class="danger">
 		      <td>Response Validation Failure Rate</td>
-		      <td>0.0%</td>
+		      <td>{{ bitrate_response_failure_rate }}</td>
 		    </tr>
 		  </tbody>
 		</table>
@@ -109,20 +109,24 @@
 		  </thead>
 		  <tbody>
 		    <tr class="active">
-		      <td>Project Version</td>
-		      <td>VEX-2.8-ER2</td>
+		      <td>Project Name</td>
+		      <td>{{project_name}}</td>
 		    </tr>
 		    <tr class="success">
+		      <td>Project Version</td>
+		      <td>{{project_version}}</td>
+		    </tr>
+		    <tr class="danger">
 		      <td>Type</td>
-		      <td>VOD_T6</td>
+		      <td>{{ test_type }}</td>
 		    </tr>
 		    <tr class="warning">
 		      <td>Date</td>
-		      <td>20/10/2013</td>
+		      <td>{{ test_date }}</td>
 		    </tr>
-		    <tr class="danger">
+		    <tr class="active">
 		      <td>Concurrent Session</td>
-		      <td>100</td>
+		      <td>{{ request_concurrent }}</td>
 		     </tr>
 		  </tbody>
 		</table>
@@ -141,27 +145,27 @@
 		    <tbody>
 		      <tr class="active">
 		        <td>Asset Number</td>
-		        <td>15000</td>
+		        <td>{{asset_number}}</td>
 		      </tr>
 		      <tr class="warning">
 		        <td>Media Request Number</td>
-		        <td>3</td>
+		        <td>{{media_request_number}}</td>
 		      </tr>
 		      <tr class="active">
 		        <td>Master Size</td>
-		        <td>10k</td>
+		        <td>{{master_content_size}}</td>
 		      </tr>
 		      <tr class="warning">
 		        <td>Media Playlist Size</td>
-		        <td>150k</td>
+		        <td>{{media_playlist_content_size}}</td>
 		      </tr>
 		      <tr class="active">
 		        <td>Media Playlist Size(Merged)</td>
-		        <td>300k</td>
+		        <td>{{merged_media_playlist_content_size}}</td>
 		      </tr>
 		      <tr class="warning">
-		        <td>SAP</td>
-		        <td>Required</td>
+		        <td>SAP Required</td>
+		        <td>{{ sap_required }}</td>
 		      </tr>
 		    </tbody>
 		 </table>

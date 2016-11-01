@@ -38,7 +38,7 @@ def result_cdvr_t6(request):
 
 # show load test result for one test type
 def _generate_result_context(request, test_type):
-    context = {'selected_test_type': test_type,
+    context = {'test_type': test_type,
                'test_type_list': get_test_type_json_list(),
                'test_project_list': get_test_project_json_list(),
                'test_version_list':get_test_version_json_list(test_type),
@@ -80,9 +80,10 @@ def _generate_context(test_result):
                     })
         
     bitrate_perf_result = VEXPerfTestResult(test_result.index_summary)
+    response_failure_rate = (100 * float('%0.6f' %bitrate_perf_result.response_failure))/ check_percent/ bitrate_perf_result.request_total
     result_context.update({'bitrate_response_average_response': bitrate_perf_result.response_average_time,
                     'bitrate_request_succeed_rate':bitrate_perf_result.request_succeed_rate,
-                    'bitrate_response_failure_rate': round((float(bitrate_perf_result.response_failure)/check_percent/ bitrate_perf_result.request_total) * 100, 2)
+                    'bitrate_response_failure_rate': ('%0.2f' %(round(100 - response_failure_rate, 2))) + '%'
                     })
     return result_context
     
@@ -99,7 +100,7 @@ def _get_vod_test_scenario(test_result):
     if test_config_dict.has_key('test.bitrate.request.number'):
         test_scenario_dict['media_request_number'] = test_config_dict.get('test.bitrate.request.number')
     else:
-        test_scenario_dict['media_request_number'] = 1
+        test_scenario_dict['media_request_number'] = 2
     
     if test_config_dict.has_key('test.index.asset.content.size'):
         test_scenario_dict['master_content_size'] = test_config_dict.get('test.index.asset.content.size')
@@ -128,3 +129,4 @@ def _get_linear_test_scenario(test_result):
 
 def _get_cdvr_test_scenario(test_result):
     return {}
+
