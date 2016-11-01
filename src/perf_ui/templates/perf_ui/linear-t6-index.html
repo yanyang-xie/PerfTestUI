@@ -2,7 +2,17 @@
 
 {% block header %}
 <script>
-
+	window.onload=function(){
+	   alert("1234");
+	}
+	
+	AmCharts.ready(function () {
+        alert("am1");
+    });
+    
+    $(window).on('load', function () {
+    	alert('jquery');
+    });
 </script>
 {% endblock%}
 

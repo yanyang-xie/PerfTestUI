@@ -1,6 +1,8 @@
 
-function drawAmCharts(columDatas, chartID) {
+function drawAmCharts(chartID, columDatas) {
     var chart;
+    
+    alert(chartID);
     
     // SERIAL CHART
     chart = new AmCharts.AmSerialChart();

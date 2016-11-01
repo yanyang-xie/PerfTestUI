@@ -10,7 +10,7 @@ from perf_ui.models import LoadTestResult, get_test_type_json_list, \
     get_test_version_json_list, get_test_project_json_list, \
     get_test_date_json_list
 from perf_ui.util import get_test_content_number
-
+from perf_ui.model.armchart import generate_vex_am_serial_chart_info
 
 logger = logging.getLogger(__name__)
 
@@ -26,8 +26,6 @@ def index(request):
 def result_vod_t6(request):
     context = _generate_result_context(request, 'VOD_T6')
     logger.debug("Context is: %s", context)
-    print context
-
     return render(request, 'perf_ui/vod-t6-index.html', context=context)
 
 def result_linear_t6(request):
@@ -52,7 +50,7 @@ def _generate_result_context(request, test_type):
     context = {}
     context.update({'test_type': test_type,
                'selected_project_name':test_result.project_name,
-               'selected_project_version':test_result.project_name,    
+               'selected_project_version':test_result.project_version,    
                'selected_result_id':test_result.id,     
                'test_type_list': get_test_type_json_list(),
                'test_project_list': get_test_project_json_list(),
@@ -82,8 +80,15 @@ def _generate_context(test_result):
     response_failure_rate = (100 * float('%0.6f' %bitrate_perf_result.response_failure))/ check_percent/ bitrate_perf_result.request_total
     result_context.update({'bitrate_response_average_response': bitrate_perf_result.response_average_time,
                     'bitrate_request_succeed_rate':bitrate_perf_result.request_succeed_rate,
-                    'bitrate_response_failure_rate': ('%0.2f' %(round(100 - response_failure_rate, 2))) + '%'
+                    'bitrate_response_success_rate': ('%0.2f' %(round(100 - response_failure_rate, 2))) + '%'
                     })
+    
+    index_am_chart_info, am_chart_defination = generate_vex_am_serial_chart_info(index_perf_result.response_time_distribution_list)
+    bitrate_am_chart_info, am_chart_defination = generate_vex_am_serial_chart_info(bitrate_perf_result.response_time_distribution_list)
+    
+    result_context.update(am_chart_defination)
+    result_context.update({'index_am_data': index_am_chart_info, 'bitrate_am_data': bitrate_am_chart_info,})
+    
     return result_context
     
 def _get_vod_test_scenario(test_result):

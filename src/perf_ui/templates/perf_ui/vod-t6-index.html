@@ -1,25 +1,32 @@
 {% extends "./perf_ui/base.html" %}
 
 {% block header %}
-
 <script>
 	AmCharts.ready(function () {
-        alert("am1");
+		var index_am_data = {{ index_am_data |safe }};
+		var bitrate_am_data = {{ bitrate_am_data |safe }};
+		
+		//var serial_chart_category_field = "{{ serial_chart_category_field }}";
+		//var serial_chart_category_axis_title = "{{ serial_chart_category_axis_title }}";
+		//var serial_chart_value_axis_titile = "{{ serial_chart_value_axis_titile }}";
+		//var serial_chart_graph_color_field = "{{ serial_chart_graph_color_field }}";
+		//var serial_chart_graph_value_field = "{{ serial_chart_graph_value_field }}";
+		
+		drawAmCharts(index_am_data, "indexChart");
+		drawAmCharts(bitrate_am_data, "bitrateChart");
+		
     });
-	
-	//$(window).on('load', function () {
-	//	alert("1234");
-	//	$("#load_test_project_list").val("{{ selected_project_name }}");
-	//	$("#load_test_version_list").val("{{ selected_project_version }}");
-    //    $("#load_test_date_list").val("{{ selected_result_id }}");
-    //});
-});
-
+    
+    $(window).on('load', function () {
+    	$("#load_test_project_list").val("{{ selected_project_name }}");
+    	$("#load_test_version_list").val("{{ selected_project_version }}");
+    	$("#load_test_date_list").val("{{ selected_result_id }}");
+    });
 </script>
 {% endblock%}
 
 {% block main %}
-<div class="row">
+	<div class="row">
 	<div class="form-group">
 	 	<div class="col-sm-6 col-md-4">
 	      <select class= "form-control text-right selectpicker" name="load_test_version_list" id="load_test_project_list" onChange="getRecentlyLoadTestResultByProject(this.value)"> 
@@ -56,9 +63,7 @@
 
 <div class="row">
    <div class="col-sm-6 col-md-4">
-      <div class="thumbnail">
-         <img src="http://www.javabeat.net/wp-content/uploads/2014/03/amazing-300x214.jpg" alt="Master response time distribution">
-      </div>
+      <div id="indexChart" class="thumbnail" style="width: auto; height: 350px;"></div>
       <h4>Master Response</h4>
       <div class="caption">
       	<table class="table">
@@ -70,15 +75,17 @@
 		      <td>Request Success Rate</td>
 		      <td>{{ index_request_succeed_rate }}</td>
 		     </tr>
+		     <tr class="danger">
+		      <td>Response Validation Success Rate</td>
+		      <td>100.00%</td>
+		    </tr>
 		  </tbody>
 		</table>
         <p><a href="#" class="btn btn-primary" role="button" onclick="alert("show distribution details info")">Distribution Details</a></p>
       </div>
    </div>
    <div class="col-sm-6 col-md-4">
-      <div class="thumbnail">
-         <img src="http://www.javabeat.net/wp-content/uploads/2014/05/dummy_image2-300x300.jpg" alt="Playlist response time distribution">
-      </div>
+   	  <div id="bitrateChart" class="thumbnail" style="width: auto; height: 350px;"></div>
       <h4>Master Response</h4>
       <div class="caption">
       	<table class="table">
@@ -91,8 +98,8 @@
 		      <td>{{ bitrate_request_succeed_rate }}</td>
 		    </tr>
 		    <tr class="danger">
-		      <td>Response Validation Failure Rate</td>
-		      <td>{{ bitrate_response_failure_rate }}</td>
+		      <td>Response Validation Success Rate</td>
+		      <td>{{ bitrate_response_success_rate }}</td>
 		    </tr>
 		  </tbody>
 		</table>
@@ -188,5 +195,4 @@
    </div>
 </div>
 <div class="divider"><h5 class="page-header"></h5></div>
-
 {% endblock%}
