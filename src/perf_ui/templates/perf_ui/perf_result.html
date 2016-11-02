@@ -172,10 +172,18 @@
 			      <td>Date</td>
 			      <td>{{ test_date }}</td>
 			    </tr>
+			    
+			    {% ifequal test_type 'VOD_T6' %} 
 			    <tr class="active">
 			      <td>Concurrent Session</td>
 			      <td>{{ request_concurrent }}</td>
 			     </tr>
+			     {% else %}
+			     <tr class="active">
+			      <td>Client Number</td>
+			      <td>{{ client_number }}</td>
+			     </tr>
+			     {% endifequal %}
 			  </tbody>
 			</table>
 			<p />

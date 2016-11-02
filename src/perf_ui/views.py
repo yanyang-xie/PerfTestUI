@@ -60,6 +60,9 @@ def _get_result_context(request, test_type):
         context.update(_get_result_summary_context(test_result))
         context.update(_get_test_scenario_context(test_result))
         context.update(_get_result_error_details_context(test_result))
+        
+        if test_type == 'CDVR_T6':
+            context['asset_number'] = context['client_number']
     else:
         context.update({'no_result': True})
     return context
@@ -142,8 +145,12 @@ def _get_test_scenario_context(test_result):
         test_scenario_dict['merged_media_playlist_content_size'] = '300k'
     
     if test_config_dict.has_key('test.require.sap'):
-        test_scenario_dict['sap_required'] = test_config_dict.get('test.require.sap')
+        test_scenario_dict['sap_required'] = 'Yes' if test_config_dict.get('test.require.sap') == 'True' else 'No'
     else:
-        test_scenario_dict['sap_required'] = 'False'
+        test_scenario_dict['sap_required'] = 'No'
+    
+    # for hot cdvr and linear
+    if test_config_dict.has_key('test.case.client.number'):
+        test_scenario_dict['client_number'] = test_config_dict.get('test.case.client.number')
     
     return test_scenario_dict
