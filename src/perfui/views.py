@@ -5,12 +5,12 @@ import logging
 
 from django.shortcuts import render_to_response, render
 
-from perf_ui.model.armchart import generate_vex_am_serial_chart_info
-from perf_ui.model.result_parser import VEXPerfTestResult
-from perf_ui.models import LoadTestResult, get_test_type_json_list, \
+from perfui.model.armchart import generate_vex_am_serial_chart_info
+from perfui.model.result_parser import VEXPerfTestResult
+from perfui.models import PerfTestResult, get_test_type_json_list, \
     get_test_version_json_list, get_test_project_json_list, \
     get_test_date_json_list
-from perf_ui.utility.common_util import get_test_content_number
+from perfui.utility.common_util import get_test_content_number
 
 logger = logging.getLogger(__name__)
 
@@ -21,29 +21,34 @@ def page_error(request):
     return render_to_response('500.html')
 
 def index(request):
-    return render(request, 'perf_ui/base.html')
+    return render(request, 'perfui/base.html')
 
 # show load test result for one test type
 def show_perf_result(request, test_type):
     context = _get_result_context(request, test_type)
     logger.debug("Context is: %s", context)
-    return render(request, 'perf_ui/perf_result.html', context=context)
+    return render(request, 'perfui/perf_result.html', context=context)
 
 def _get_result_context(request, test_type):
-    load_test_results = LoadTestResult.objects.filter(test_type=test_type);
-    
+    load_test_results = PerfTestResult.objects.filter(test_type=test_type);
+    context = {'test_type': test_type,
+               'test_type_list': get_test_type_json_list(),
+               'test_project_list': get_test_project_json_list(),
+               }
+
     if request.GET.has_key('project_name'):
         project_name = request.GET.get('project_name')
+        context.update({'selected_project_name': project_name,})
         load_test_results = load_test_results.filter(project_name=project_name)
     
     if request.GET.has_key('project_version'):
         project_version = request.GET.get('project_version')
+        context.update({'selected_project_version': project_version,})
         load_test_results = load_test_results.filter(project_version=project_version)
     
-    context = {'test_type': test_type,}
     if load_test_results.count() > 0:
         if request.GET.has_key('test_result_id'):
-            test_result = LoadTestResult.objects.get(id=int(request.GET.get('test_result_id')));
+            test_result = PerfTestResult.objects.get(id=int(request.GET.get('test_result_id')));
         else:
             test_result = load_test_results[0]
         context.update(
@@ -52,8 +57,6 @@ def _get_result_context(request, test_type):
                 'selected_project_name':test_result.project_name,
                 'selected_project_version':test_result.project_version,   
                 'selected_result_id':test_result.id,     
-                'test_type_list': get_test_type_json_list(),
-                'test_project_list': get_test_project_json_list(),
                 'test_version_list':get_test_version_json_list(test_type, test_result.project_name),
                 'test_date_list': get_test_date_json_list(test_type, test_result.project_name, test_result.project_version),
                 })
@@ -64,7 +67,11 @@ def _get_result_context(request, test_type):
         if test_type == 'CDVR_T6':
             context['asset_number'] = context['client_number']
     else:
-        context.update({'no_result': True})
+        context.update({'no_result': True, 
+                        
+                        })
+    
+    print context
     return context
     
 def _get_result_summary_context(test_result):
