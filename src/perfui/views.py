@@ -70,8 +70,6 @@ def _get_result_context(request, test_type):
         context.update({'no_result': True, 
                         
                         })
-    
-    print context
     return context
     
 def _get_result_summary_context(test_result):
