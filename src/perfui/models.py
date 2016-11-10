@@ -91,16 +91,16 @@ class PerfTestConfig(models.Model):
 
 class Operation(models.Model):
     name = models.CharField(max_length=512, blank=False, null=False)
-    start_command = models.CharField(max_length=512, blank=False, null=False)
-    stop_command = models.CharField(max_length=512, blank=False, null=False)
+    start_command = models.CharField(max_length=512, blank=True, null=True)
+    stop_command = models.CharField(max_length=512, blank=True, null=True)
     status_command = models.CharField(max_length=512, blank=True, null=True)
-    status_info = models.CharField(max_length=20, blank=False, null=False, default='')
+    status_info = models.CharField(max_length=20, blank=True, null=True, default='')
     
     class Meta:
         db_table = 'operation'
 
 class VEXPerfTestOperation(Operation):
-    perf_config = models.OneToOneField(PerfTestConfig, parent_link=True)
+    perf_config = models.OneToOneField(PerfTestConfig)
     
     class Meta:
         db_table = 'perf_operation'

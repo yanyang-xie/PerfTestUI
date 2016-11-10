@@ -8,6 +8,11 @@ urlpatterns = patterns('perfui.views',
     url(r'^result/(?P<test_type>.+)', 'show_perf_result', name='perf_result'),
 )
 
+urlpatterns += patterns('perfui.op_views',
+    url(r'^op$', 'index', name='op-home'),
+    url(r'^op/update$', 'update', name='op_update'),
+)
+
 #urlpatterns += patterns('perfui.views',
 #    url(r'^about', 'about', name='about'),
 #)

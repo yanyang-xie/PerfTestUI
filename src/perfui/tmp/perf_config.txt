@@ -1,0 +1,45 @@
+{'client.response.endlist.tag': '#EXT-X-ENDLIST', 'test.client.request.timeout': '7', 'test.case.survival': '54000', 'db.vex.result.store.enable': 'True', 'psn.fake.send': 'False', 'client.response.ad.mid.roll.ts.number': '135', 'test.index.asset.content.size': '10k', 'client.response.ad.pre.roll.ts.number': '45', 'test.result.report.error.file': 'load-test-error.txt', 'golden_config_file': '/Users/xieyanyang/work/learning/PerfTest/src/perf/test/vod/config-golden.properties', 'test.machine.pubkey': '/Users/xieyanyang/work/ttbj/ttbj-keypair.pem', 'psn.send': 'False', 'db.database': 'perftest', 'test.use.sap': 'True', 'db.vex.result.table': 'perf_result', 'client.response.check.percent': '0.5', 'db.host': 'localhost', 'client.response.check.when.running': 'True', 'test.case.counter.dump.interval': '60', 'client.response.media.sequence': '18', 'test.case.name': 'vod-perf', 'bitrate.response.counter': '0,200,500,1000,2000,3000,6000,12000', 'psn.fake.position': '1,76,151,226,301', 'test.bitrate.serial.time.gap': '300', 'client.response.ad.post.roll.ts.number': '45', 'index.response.counter': '0,200,500,1000,2000,3000,6000,12000', 'test.machine.username': 'root', 'test.result.log.file': 'load-test.log', 'test.result.collect.before.now': '4', 'db.user': 'root', 'test.case.server.instance.number': '2', 'test.require.sap': 'True', 'test.result.report.traced.dir': 'load-test-trace', 'test.client.request.retry.count': '3', 'test.execute.process.number': '1', 'task.apschdule.queue.misfire.time': '300', 'log.export.thirdparty': 'False', 'task.apschdule.threadpool.core.threads': '150', 'psn.apschdule.threadpool.max.threads': '100', 'client.response.media.tag': '#EXT-X-MEDIA-SEQUENCE', 'test.result.report.dir': '/tmp/load-test-result', 'db.vex.config.table': 'vex_config', 'psn.endall.send': 'False', 'test.use.iframe': 'True', 'test.case.type': 'VOD_T6', 'test.client.vip.latest.segment.range': '100~119', 'test.machine.hosts': '54.169.51.77', 'psn.fake.tracking.id': '1-2-3-4', 'log.level': 'INFO', 'test.bitrate.asset.content.size.merged': '300k', 'db.vex.config.enable': 'False', 'test.use.fake.manifest': 'True', 'task.apschdule.queue.max': '100000', 'test.case.concurrent.number': '4', 'test.result.report.delta.file': 'delta-report.txt', 'test.bitrate.serial': 'False', 'test.result.report.file': 'load-test-report.txt', 'test.result.report.error.dir': 'load-test-error', 'db.password': '111111', 'client.response.ad.tag': 'espn', 'test.bitrate.asset.content.size': '150k', 'project.name': 'VEX-Core', 'psn.message.sender.position': '0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1', 'test.bitrate.request.number': '2', 'client.response.ad.mid.roll.position': '225,450,675', 'client.response.asset.tag': 'vod', 'psn.endall.position': '2000', 'psn.apschdule.threadpool.core.threads': '100', 'psn.apschdule.queue.max': '100000', 'client.response.content.segment.number': '900', 'test.client.location.number': '500', 'test.machine.port': '22', 'client.response.content.segment.time': '2', 'client.response.error.dump': 'False', 'client.response.drm.tag': '4g8W0yS1bDxiM8ejG4', 'test.case.warmup.period.minute': '10', 'test.case.content.names': 'vod_test_[1~18000]', 'test.result.report.traced.file': 'load-test-response.txt', 'test.bitrate.request.random': 'True', 'psn.receiver.host': '54.169.51.181', 'task.apschdule.threadpool.max.threads': '150', 'db.port': '3306', 'psn.tag': '#EXT-X-CUE', 'psn.apschdule.queue.misfire.time': '36000', 'test.result.report.delta.dir': 'delta-reports', 'test.client.request.retry.delay': '1', 'test.client.zone.number': '500', 'project.version': '2.8.0-SNAPSHOT', 'psn.receiver.port': '80'}
+
+Index response summary  
+  Test Duration (second): 900 
+  Request concurrent    : 23  
+  Request In Total      : 21570
+  Request Succeed       : 21570
+  Request Failure       : 0
+  Request Succeed Rate  : 100.00%
+  Response Average Time : 14
+  Response Failure      : 0
+  Response Time Distribution
+      0-200      millisecond: 21562
+      200-500    millisecond: 5
+      500-1000   millisecond: 2
+      1000-2000  millisecond: 1
+      2000-3000  millisecond: 0
+      3000-6000  millisecond: 0
+      6000-12000 millisecond: 0
+
+Bitrate response summary
+  Test Duration (second): 900 
+  Request concurrent    : 47  
+  Request In Total      : 43121
+  Request Succeed       : 43121
+  Request Failure       : 0
+  Request Succeed Rate  : 100.00%
+  Response Average Time : 25
+  Response Failure      : 2163
+  Response Time Distribution
+      0-200      millisecond: 43116
+      200-500    millisecond: 4
+      500-1000   millisecond: 1
+      1000-2000  millisecond: 0
+      2000-3000  millisecond: 0
+      3000-6000  millisecond: 0
+      6000-12000 millisecond: 0
+      
+69.209.207.113   : Manifest ad pre-roll number is 0, not the same as expected number 45
+34.110.108.104   : Manifest ad pre-roll number is 0, not the same as expected number 45
+36.223.229.104   : Manifest ad pre-roll number is 0, not the same as expected number 45
+62.217.146.113   : Manifest ad pre-roll number is 0, not the same as expected number 45
+43.42.206.100    : Manifest ad pre-roll number is 0, not the same as expected number 45
+
+      

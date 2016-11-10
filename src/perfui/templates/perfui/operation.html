@@ -1,0 +1,53 @@
+{% extends "./perfui/base.html" %}
+
+{% block header %}
+<script>
+	$(function() {
+	    //$.fn.editable.defaults.mode = 'inline';
+	    $('#vex_operations a').editable({
+	    	url:'/op/update',
+	        success: function(response, newValue) {
+		        if(response.status == 'error') {
+		        	alert("Failed to save.");
+		        }else{
+		        	//alert("Saved");
+		        }
+		    }
+	     });
+	});
+</script>
+{% endblock%}
+
+{% block main %}
+
+<div class="col-sm-12 col-md-12">
+	 <div class="caption">
+		<table id="vex_operations" data-toggle="table" class="table table-bordered table-condensed">
+			<colgroup>
+				<col style="width:20%">
+				<col style="width:20%">
+				<col style="width:30%">
+				<col style="width:30%">
+			</colgroup>
+			<thead>
+			    <tr>
+			      <th>Name</th>
+			      <th>Test Type</th>
+			      <th>Project Name</th>
+			      <th>Project Configuration</th>
+			     </tr>
+			</thead>
+			<tbody>
+			    {% for vex_operation in vex_operation_list %}
+			    <tr>
+		            <td>{{ vex_operation.name }}</td>
+		            <td>{{ vex_operation.perf_config.test_type }}</td>
+		            <td>{{ vex_operation.perf_config.project_name }}</td>
+		            <td><a href="#" id="op_id" name="op_name" data-pk="{{ vex_operation.id }}">{{ vex_operation.id }}</a></td>
+		        </tr>
+		        {% endfor %}
+			 </tbody>
+		</table>
+	</div>
+</div>
+{% endblock%}
