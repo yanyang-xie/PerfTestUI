@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 import json
-
+import string
 
 serial_chart_category_field_tag = 'ResponseTime'
 serial_chart_graph_value_field_tag = 'Client'
@@ -32,14 +32,17 @@ class AmSerialchartModel(object):
     def generate_armchart_column_json(self):
         return json.dumps(self.amchart_column_list)
     
-    def get_am_chart_defination(self):
+    def get_am_chart_defination(self, tag=None):
         am_chart_defination = {'serial_chart_category_field':serial_chart_category_field_tag,
                                'serial_chart_graph_value_field':serial_chart_graph_value_field_tag,
                                'serial_chart_graph_color_field': serial_chart_graph_color_field_tag,
-                               
-                               'serial_chart_category_axis_title':serial_chart_category_axis_title,
                                'serial_chart_value_axis_titile':serial_chart_value_axis_titile,
                                }
+        
+        if tag is not None and tag != '':
+            am_chart_defination[string.lower(tag) + '_serial_chart_category_axis_title'] = tag + '' + serial_chart_category_axis_title
+        else:
+            am_chart_defination['serial_chart_category_axis_title'] = serial_chart_category_axis_title
         
         return am_chart_defination
 
@@ -75,12 +78,12 @@ class VEXAmSerialchartModel(AmSerialchartModel):
         self._sort()
         return json.dumps(self.amchart_column_list)
 
-def generate_vex_am_serial_chart_info(time_distribution_list):
+def generate_vex_am_serial_chart_info(time_distribution_list, tag=None):
     vex_chart = VEXAmSerialchartModel()
     for time_distribution in time_distribution_list:
         vex_chart.add_armchart_column(AmSerialChartColumn(time_distribution[0], time_distribution[1]))
     
-    return vex_chart.generate_armchart_column_json(), vex_chart.get_am_chart_defination()
+    return vex_chart.generate_armchart_column_json(), vex_chart.get_am_chart_defination(tag)
 
     
         

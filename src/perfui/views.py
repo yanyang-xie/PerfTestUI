@@ -87,7 +87,7 @@ def _get_result_summary_context(test_result):
                     'index_request_succeed_rate':index_perf_result.request_succeed_rate,
                     })
         
-    bitrate_perf_result = VEXPerfTestResult(test_result.index_summary)
+    bitrate_perf_result = VEXPerfTestResult(test_result.bitrate_summary)
     response_failure_rate = (100 * float('%0.6f' %bitrate_perf_result.response_failure))/ check_percent/ bitrate_perf_result.request_total
     result_context.update({'bitrate_response_average_response': bitrate_perf_result.response_average_time,
                     'bitrate_request_succeed_rate':bitrate_perf_result.request_succeed_rate,
@@ -95,10 +95,12 @@ def _get_result_summary_context(test_result):
                     'bitrate_response_error_details': test_result.error_details.strip(),
                     })
     
-    index_am_chart_info, am_chart_defination = generate_vex_am_serial_chart_info(index_perf_result.response_time_distribution_list)
-    bitrate_am_chart_info = generate_vex_am_serial_chart_info(bitrate_perf_result.response_time_distribution_list)[0]
+    index_am_chart_info, index_am_chart_defination = generate_vex_am_serial_chart_info(index_perf_result.response_time_distribution_list, "Index")
+    bitrate_am_chart_info, bitrate_am_chart_defination = generate_vex_am_serial_chart_info(bitrate_perf_result.response_time_distribution_list, "Bitrate")
     
-    result_context.update(am_chart_defination)
+    result_context.update(index_am_chart_defination)
+    result_context.update(bitrate_am_chart_defination)
+    print result_context
     result_context.update({'index_am_data': index_am_chart_info, 'bitrate_am_data': bitrate_am_chart_info,})
     
     return result_context
