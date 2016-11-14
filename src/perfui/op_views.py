@@ -10,6 +10,6 @@ def index(request):
     
     return render_to_response('perfui/operation.html', context)
 
-def update(request):
+def update_perf_config(request):
     print request.POST
     return HttpResponse('ok')

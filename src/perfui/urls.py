@@ -10,7 +10,7 @@ urlpatterns = patterns('perfui.views',
 
 urlpatterns += patterns('perfui.op_views',
     url(r'^op$', 'index', name='op-home'),
-    url(r'^op/update$', 'update', name='op_update'),
+    url(r'^op/update/perf$', 'update_perf_config', name='op_perf_update_perf_config'),
 )
 
 #urlpatterns += patterns('perfui.views',

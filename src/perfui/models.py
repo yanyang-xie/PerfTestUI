@@ -77,11 +77,16 @@ def get_test_date_json_list(test_type, project_name=None, project_version=None):
 class PerfTestConfig(models.Model):
     project_name = models.CharField(max_length=100, choices=CHOICES_PROJECT, blank=False, null=False)
     test_type = models.CharField(max_length=100, choices=CHOICES_TYPE, blank=False, null=False)
-    test_config = models.TextField(blank=False, null=False)
+    test_config = models.TextField(blank=True, null=True)
+    
+    content_size = models.IntegerField(blank=False, null=False, default=15000)
+    bitrate_number = models.IntegerField(blank=False, null=False, default=2)
+    concurrent_session = models.IntegerField(blank=True, null=True, default=0)
+    warm_up_minute = models.IntegerField(blank=False, null=False, default=0)
     
     def __unicode__(self):
-        return '[id:{}, project_name:{}, test_type:{}, test_config:{}, ]'\
-                    .format(self.id, self.project_name, self.test_type, self.test_config)
+        return '[id:{}, project_name:{}, test_type:{}, content_size:{}, bitrate_number:{}, concurrent_session:{}, warm_up_minute:{}, ]'\
+                    .format(self.id, self.project_name, self.test_type, self.content_size, self.bitrate_number, self.concurrent_session, self.warm_up_minute)
     
     class Meta:
         db_table = 'perf_config'
@@ -100,7 +105,7 @@ class Operation(models.Model):
         db_table = 'operation'
 
 class VEXPerfTestOperation(Operation):
-    perf_config = models.OneToOneField(PerfTestConfig)
+    perf_config = models.OneToOneField(PerfTestConfig, blank=True, null=True,)
     
     class Meta:
         db_table = 'perf_operation'
