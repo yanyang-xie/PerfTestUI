@@ -2,8 +2,9 @@
 
 {% block header %}
 <style>
-    .table > tbody > tr > td {
+    .table > tbody > tr > td,th {
 	     vertical-align: middle;
+	     height: 45px;
 	}
 </style>
 
@@ -12,12 +13,12 @@
 	    $.fn.editable.defaults.mode = 'inline';
 	    $('#vex_operations a').editable({
 	    	url:'/op/update/perf',
-	        success: function(response, newValue) {
-		        if(response.status == 'error') {
-		        	alert("Failed to save the change.");
-		        }else{
-		        	//alert("Saved");
-		        }
+	        success: function(response) {
+	        	//alert(response)
+		    },
+		    error:function(data)
+		    {
+		        //alert(response); 
 		    }
 	     });
 	});
@@ -33,18 +34,16 @@
 			<colgroup>
 				<col style="width:2%">
 				<col style="width:2%">
-				<col style="width:5%">
-				<col style="width:5%">
+				<col style="width:4%">
 				<col style="width:5%">
 				<col style="width:5%">
 				<col style="width:4%">
-				<col style="width:10%">
+				<col style="width:13%">
 			</colgroup>
 			<thead>
 			    <tr>
 			      <th class='text-center'>Name</th>
 			      <th class='text-center'>Test Type</th>
-			      <th class='text-center'>Project Name</th>
 			      <th class='text-center'>Content Size</th>
 			      <th class='text-center'>Bitrate Number</th>
 			      <th class='text-center'>Concurrent Session</th>
@@ -57,17 +56,14 @@
 			    <tr class='success text-center'>
 		            <td class="">{{ vex_operation.name }}</td>
 		            <td>{{ vex_operation.perf_config.test_type }}</td>
-		            <td>{{ vex_operation.perf_config.project_name }}</td>
 		            <td><a href="#" id="content_size" name="content_size" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.content_size }}</a></td>
 		            <td><a href="#" id="bitrate_number" name="bitrate_number" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.bitrate_number }}</a></td>
-		            <td><a href="#" id="concurrent_number" name="concurrent_number" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.concurrent_session }}</a></td>
+		            <td><a href="#" id="concurrent_number" name="concurrent_number" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.concurrent_number }}</a></td>
 		            <td><a href="#" id="warm_up_minute" name="warm_up_minute" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.warm_up_minute }}</a> Minute</td>
 		            <td>
-		            	<div class="btn-group">
-							<button type="button" class="btn btn-success">Start</button>
-							<button type="button" class="btn btn-default">Stop</button>
-							<button type="button" class="btn btn-default">Status</button>
-						</div>
+						<button type="button" class="btn btn-success">Start</button>
+						<button type="button" class="btn btn-primary">Stop</button>
+						<button type="button" class="btn btn-warning">Status</button>
 		            </td>
 		        </tr>
 		        {% endfor %}

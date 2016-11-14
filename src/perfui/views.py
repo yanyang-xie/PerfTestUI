@@ -100,7 +100,6 @@ def _get_result_summary_context(test_result):
     
     result_context.update(index_am_chart_defination)
     result_context.update(bitrate_am_chart_defination)
-    print result_context
     result_context.update({'index_am_data': index_am_chart_info, 'bitrate_am_data': bitrate_am_chart_info,})
     
     return result_context

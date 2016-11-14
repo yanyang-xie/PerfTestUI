@@ -81,12 +81,12 @@ class PerfTestConfig(models.Model):
     
     content_size = models.IntegerField(blank=False, null=False, default=15000)
     bitrate_number = models.IntegerField(blank=False, null=False, default=2)
-    concurrent_session = models.IntegerField(blank=True, null=True, default=0)
+    concurrent_number = models.IntegerField(blank=True, null=True, default=0)
     warm_up_minute = models.IntegerField(blank=False, null=False, default=0)
     
     def __unicode__(self):
-        return '[id:{}, project_name:{}, test_type:{}, content_size:{}, bitrate_number:{}, concurrent_session:{}, warm_up_minute:{}, ]'\
-                    .format(self.id, self.project_name, self.test_type, self.content_size, self.bitrate_number, self.concurrent_session, self.warm_up_minute)
+        return 'id:{}, project_name:{}, test_type:{}, content_size:{}, bitrate_number:{}, concurrent_number:{}, warm_up_minute:{}'\
+                    .format(self.id, self.project_name, self.test_type, self.content_size, self.bitrate_number, self.concurrent_number, self.warm_up_minute)
     
     class Meta:
         db_table = 'perf_config'
@@ -103,9 +103,18 @@ class Operation(models.Model):
     
     class Meta:
         db_table = 'operation'
+        
+    def __unicode__(self):
+        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, status_info:{}'\
+                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.status_info)
+    
 
 class VEXPerfTestOperation(Operation):
     perf_config = models.OneToOneField(PerfTestConfig, blank=True, null=True,)
     
     class Meta:
         db_table = 'perf_operation'
+    
+    def __unicode__(self):
+        return 'id:{}, name:{}, perf_config:[{}]'.format(self.id, self.name, self.perf_config)
+    

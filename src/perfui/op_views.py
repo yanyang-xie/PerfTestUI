@@ -1,8 +1,15 @@
 # -*- coding=utf-8 -*-
 # author: yanyang.xie@gmail.com
-from django.http.response import HttpResponse
-from django.shortcuts import render_to_response
+import logging
+
+from django.http.response import HttpResponse, HttpResponseServerError, \
+    HttpResponseBadRequest
+from django.shortcuts import render_to_response, get_object_or_404
+
 from perfui.models import VEXPerfTestOperation
+
+
+logger = logging.getLogger(__name__)
 
 def index(request):
     vex_operation_list = VEXPerfTestOperation.objects.all()
@@ -11,5 +18,27 @@ def index(request):
     return render_to_response('perfui/operation.html', context)
 
 def update_perf_config(request):
-    print request.POST
-    return HttpResponse('ok')
+    try:
+        #print request.POST.items()
+        pk = request.POST.get('pk')
+        name = request.POST.get('name')
+        value = int(request.POST.get('value'))
+        logger.debug('Update: pk:%s, name:%s, value:%s' %(pk, name , value))
+        vex_op_object = get_object_or_404(VEXPerfTestOperation, pk=pk)
+        perf_config = vex_op_object.perf_config
+        
+        if name == 'content_size': perf_config.content_size=value
+        if name == 'bitrate_number': perf_config.bitrate_number=value
+        if name == 'concurrent_number': perf_config.concurrent_number=value
+        if name == 'warm_up_minute': perf_config.warm_up_minute=value
+        
+        perf_config.save()
+        return HttpResponse('Saved')
+    except ValueError, e:
+        logger.error('Value of %s must be int. %s' %(name, e))
+        response = HttpResponseBadRequest('Value of %s must be int' %(name))
+        return response
+    except Exception, e:
+        logger.error('Failed to save the change. %s' %e)
+        response = HttpResponseServerError('Server ERROR')
+        return response
