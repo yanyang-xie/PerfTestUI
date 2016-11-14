@@ -2,9 +2,8 @@
 
 {% block header %}
 <style>
-    td {
-	    text-align: center; 
-	    vertical-align: top;
+    .table > tbody > tr > td {
+	     vertical-align: middle;
 	}
 </style>
 
@@ -56,7 +55,7 @@
 			<tbody>
 			    {% for vex_operation in vex_operation_list %}
 			    <tr class='success text-center'>
-		            <td valign="middle">{{ vex_operation.name }}</td>
+		            <td class="">{{ vex_operation.name }}</td>
 		            <td>{{ vex_operation.perf_config.test_type }}</td>
 		            <td>{{ vex_operation.perf_config.project_name }}</td>
 		            <td><a href="#" id="content_size" name="content_size" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.content_size }}</a></td>
