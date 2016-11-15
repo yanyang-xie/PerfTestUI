@@ -4,7 +4,7 @@
 <style>
     .table > tbody > tr > td,th {
 	     vertical-align: middle;
-	     height: 40px;
+	     //height: 35px;
 	}
 </style>
 
@@ -32,13 +32,13 @@
 	 <div class="caption">
 		<table id="vex_operations" data-toggle="table" class="table table-striped table-bordered table-hover">
 			<colgroup>
-				<col style="width:2%">
-				<col style="width:2%">
+				<col style="width:3%">
+				<col style="width:3%">
 				<col style="width:4%">
 				<col style="width:5%">
 				<col style="width:5%">
 				<col style="width:4%">
-				<col style="width:13%">
+				<col style="width:10%">
 			</colgroup>
 			<thead>
 			    <tr>
@@ -58,12 +58,18 @@
 		            <td>{{ vex_operation.perf_config.test_type }}</td>
 		            <td><a href="#" id="content_size" name="content_size" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.content_size }}</a></td>
 		            <td><a href="#" id="bitrate_number" name="bitrate_number" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.bitrate_number }}</a></td>
-		            <td><a href="#" id="concurrent_number" name="concurrent_number" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.concurrent_number }}</a></td>
+		            <td><a href="#" id="session_number" name="session_number" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.session_number }}</a></td>
 		            <td><a href="#" id="warm_up_minute" name="warm_up_minute" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.warm_up_minute }}</a> Minute</td>
-		            <td>
-						<button type="button" class="btn btn-success">Start</button>
-						<button type="button" class="btn btn-primary">Stop</button>
-						<button type="button" class="btn btn-warning">Status</button>
+		            <td class='text-left'>
+		            	{% if vex_operation.start_command != '' %} 
+							<button type="button" class="btn btn-success">Start</button>
+						{% endif %}
+						{% if vex_operation.stop_command != '' %}
+							<button type="button" class="btn btn-primary">Stop</button>
+						{% endif%}
+						{% if vex_operation.status_command != '' %}
+							<button type="button" class="btn btn-warning">Status</button>
+						{% endif%}
 		            </td>
 		        </tr>
 		        {% endfor %}
@@ -73,4 +79,48 @@
 	<div class="divider"><h5 class="page-header"></h5></div>
 </div>
 
+
+<div class="row col-sm-12 col-md-12">
+	<p><strong class="text-success">Test Tool Operation</strong></p>
+</div>
+<div class="row col-sm-12 col-md-12">
+    {% for sub_operation_list in operation_list %}
+    {% if sub_operation_list %}
+	<div class="col-sm-4 col-md-4">
+		 <div class="caption">
+			<table id="vex_operations" data-toggle="table" class="table table-striped table-bordered table-hover">
+				<colgroup>
+					<col style="width:40%">
+					<col style="width:60%">
+				</colgroup>
+				<thead>
+				    <tr>
+				      <th class='text-center'>Name</th>
+				      <th class='text-center'>Operation</th>
+				     </tr>
+				</thead>
+				<tbody>
+				    {% for vex_operation in sub_operation_list %}
+				    <tr class='success text-center'>
+			            <td class="">{{ vex_operation.name }}</td>
+			            <td class='text-left'>
+			            	{% if vex_operation.start_command != '' %} 
+								<button type="button" class="btn btn-success">Start</button>
+							{% endif %}
+							{% if vex_operation.stop_command != '' %}
+								<button type="button" class="btn btn-primary">Stop</button>
+							{% endif%}
+							{% if vex_operation.status_command != '' %}
+								<button type="button" class="btn btn-warning">Status</button>
+							{% endif%}
+			            </td>
+			        </tr>
+			        {% endfor %}
+				 </tbody>
+			</table>
+		</div>
+	</div>
+	{% endif %}
+	{% endfor %}
+</div>
 {% endblock%}

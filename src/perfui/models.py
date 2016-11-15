@@ -81,12 +81,14 @@ class PerfTestConfig(models.Model):
     
     content_size = models.IntegerField(blank=False, null=False, default=15000)
     bitrate_number = models.IntegerField(blank=False, null=False, default=2)
-    concurrent_number = models.IntegerField(blank=True, null=True, default=0)
+    
+    # To VOD, it is concurrent number. To linear and cdvr, it is total client number.
+    session_number = models.IntegerField(blank=True, null=True, default=0)
     warm_up_minute = models.IntegerField(blank=False, null=False, default=0)
     
     def __unicode__(self):
-        return 'id:{}, project_name:{}, test_type:{}, content_size:{}, bitrate_number:{}, concurrent_number:{}, warm_up_minute:{}'\
-                    .format(self.id, self.project_name, self.test_type, self.content_size, self.bitrate_number, self.concurrent_number, self.warm_up_minute)
+        return 'id:{}, project_name:{}, test_type:{}, content_size:{}, bitrate_number:{}, session_number:{}, warm_up_minute:{}'\
+                    .format(self.id, self.project_name, self.test_type, self.content_size, self.bitrate_number, self.session_number, self.warm_up_minute)
     
     class Meta:
         db_table = 'perf_config'
