@@ -101,15 +101,15 @@ class Operation(models.Model):
     start_command = models.CharField(max_length=512, blank=True, null=True)
     stop_command = models.CharField(max_length=512, blank=True, null=True)
     status_command = models.CharField(max_length=512, blank=True, null=True)
+    result_collect_command = models.CharField(max_length=512, blank=True, null=True)
     status_info = models.CharField(max_length=20, blank=True, null=True, default='')
     
     class Meta:
         db_table = 'operation'
         
     def __unicode__(self):
-        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, status_info:{}'\
-                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.status_info)
-    
+        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, result_collect_command:{}, status_info:{}'\
+                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.result_collect_command, self.status_info)
 
 class VEXPerfTestOperation(Operation):
     perf_config = models.OneToOneField(PerfTestConfig, blank=True, null=True,)
