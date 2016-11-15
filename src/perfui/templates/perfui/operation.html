@@ -89,7 +89,14 @@
 			</thead>
 			<tbody>
 			    {% for vex_operation in vex_operation_list %}
-			    <tr class='success text-center'>
+			    <tr class="success text-center">
+			    {% if forloop.counter|divisibleby:"2" %}
+				    <tr class="success text-center">
+				{% elif forloop.counter|divisibleby:"3" %}
+				    <tr class="active text-center">
+				{% else %}
+				    <tr class="warning text-center">
+				{% endif %}
 		            <td class="">{{ vex_operation.name }}</td>
 		            <td>{{ vex_operation.perf_config.test_type }}</td>
 		            <td><a href="#" id="content_size" name="content_size" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.content_size }}</a></td>
@@ -146,8 +153,14 @@
 				</thead>
 				<tbody>
 				    {% for vex_operation in sub_operation_list %}
-				    <tr class='success text-center'>
-			            <td class="">{{ vex_operation.name }}</td>
+				    {% if forloop.counter|divisibleby:"2" %}
+					    <tr class="success text-center">
+					{% elif forloop.counter|divisibleby:"3" %}
+					    <tr class="active text-center">
+					{% else %}
+					    <tr class="warning text-center">
+					{% endif %}
+			            <td>{{ vex_operation.name }}</td>
 			            <td class='text-left'>
 			            	{% if vex_operation.start_command %} 
 								<button type="button" class="btn btn-success" onclick="start('{{vex_operation.id}}')">Run</button>
