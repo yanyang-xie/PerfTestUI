@@ -107,7 +107,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR + '/static'
 
-LOG_FILE = BASE_DIR + "/all.log"
+LOG_FILE = BASE_DIR + "/perfui.log"
 
 LOGGING = {
     'version': 1,
@@ -145,8 +145,16 @@ LOGGING = {
         },
         '': {
             'handlers': ['logfile', 'console'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': True,
+        },
+        'django.db': {
+            # # django also has database level logging
+            'handlers': ['console'],
+            
+            # if level is debug, then sql will be showed into console
+            'level': 'INFO',
+            'propagate': False,
         },
     }
 }

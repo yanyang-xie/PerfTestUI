@@ -31,33 +31,29 @@
 	$(function() {
 	    $.fn.editable.defaults.mode = 'inline';
 	    $('#vex_operations a').editable({
-	    	url:'/op/update/perf',
+	    	url:'/op/update',
 	        success: function(response) {
 	        	//alert(response)
 		    },
 		    error:function(data)
 		    {
-		        //alert(response); 
+		        //alert(response);
 		    }
 	     });
 	});
 	
-	function start(op_id){
-		alert("start " + op_id);
+	function operation(op_tag, op_id){
+		$.getJSON("/op/execute?op_tag=" + op_tag + "&op_id=" + op_id,
+		    function(data)
+	        {
+				if(data["status_code"] == 200){
+					alert(op_tag+ " ok");
+				}else{
+					alert(data["message"]);
+				}
+	        }
+		);
 	}
-	
-	function stop(op_id){
-		alert("stop " + op_id);
-	}
-	
-	function status(op_id){
-		alert("get status for" + op_id);
-	}
-	
-	function result_collect(op_id){
-		alert("result collect for " + op_id);
-	}
-	
 </script>
 {% endblock%}
 
@@ -111,16 +107,16 @@
 		            <td><a href="#" id="warm_up_minute" name="warm_up_minute" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.warm_up_minute }}</a> Minute</td>
 		            <td class='mytd text-left'>
 		            	{% if vex_operation.start_command%}
-							<button type="button" class="btn btn-success" onclick="start('{{vex_operation.id}}')">Start</button>
+							<button type="button" class="btn btn-success" onclick="operation('start','{{vex_operation.id}}')">Start</button>
 						{% endif %}
 						{% if vex_operation.stop_command %}
-							<button type="button" class="btn btn-primary" onclick="stop('{{vex_operation.id}}')">Stop</button>
+							<button type="button" class="btn btn-primary" onclick="operation('stop','{{vex_operation.id}}')">Stop</button>
 						{% endif%}
 						{% if vex_operation.status_command %}
-							<button type="button" class="btn btn-warning" onclick="status('{{vex_operation.id}}')">Status</button>
+							<button type="button" class="btn btn-warning" onclick="operation('status','{{vex_operation.id}}')">Status</button>
 						{% endif%}
 						{% if vex_operation.result_collect_command %}
-							<button type="button" class="btn btn-warning" onclick="result_collect('{{vex_operation.id}}')">Result</button>
+							<button type="button" class="btn btn-warning" onclick="operation('result','{{vex_operation.id}}')">Result</button>
 						{% endif%}
 		            </td>
 		        </tr>
@@ -130,7 +126,6 @@
 	</div>
 	<div class="divider"><h5 class="page-header"></h5></div>
 </div>
-
 
 <div class="row col-sm-12 col-md-12">
 	<p><strong class="text-success">Test Tool Operation</strong></p>
@@ -163,13 +158,13 @@
 			            <td>{{ vex_operation.name }}</td>
 			            <td class='text-left'>
 			            	{% if vex_operation.start_command %} 
-								<button type="button" class="btn btn-success" onclick="start('{{vex_operation.id}}')">Run</button>
+								<button type="button" class="btn btn-success" onclick="operation('start','{{vex_operation.id}}')">Run</button>
 							{% endif %}
 							{% if vex_operation.stop_command %}
-								<button type="button" class="btn btn-primary" onclick="stop('{{vex_operation.id}}')">Stop</button>
+								<button type="button" class="btn btn-primary" onclick="operation('stop','{{vex_operation.id}}')">Stop</button>
 							{% endif%}
 							{% if vex_operation.status_command %}
-								<button type="button" class="btn btn-warning" onclick="status('{{vex_operation.id}}')">Status</button>
+								<button type="button" class="btn btn-warning" onclick="operation('status','{{vex_operation.id}}')">Status</button>
 							{% endif%}
 			            </td>
 			        </tr>
