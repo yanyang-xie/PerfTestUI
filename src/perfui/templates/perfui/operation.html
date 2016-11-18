@@ -42,6 +42,14 @@
 	     });
 	});
 	
+	function ucfirst(str) {
+		var str = str.toLowerCase();
+		str = str.replace(/\b\w+\b/g, function(word){
+		  return word.substring(0,1).toUpperCase()+word.substring(1);
+		});
+		return str;
+	}
+	
 	function operation(op_tag, op_id, btn_id){
 		var btn = $("#" + btn_id);
 		btn.button('loading');
@@ -51,11 +59,20 @@
 		    function(data)
 	        {
 				if(data["status_code"] == 200){
-					alert(op_tag+ " ok");
+					bootbox.alert({
+						title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Succeed</p>",
+						message: "<p><strong class='text-success'>" + data["message"] + "</p>",
+					    size: 'large'
+					});
+					btn.button('reset');
 				}else{
-					alert(data["message"]);
+					bootbox.alert({
+						title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Failure</p>",
+						message: "<p><strong class='text-danger'>" + data["message"] + "</p>",
+					    size: 'large'
+					});
+					btn.button('reset');
 				}
-				btn.button('reset');
 	        }
 		);
 	}

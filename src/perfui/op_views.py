@@ -1,6 +1,6 @@
 # -*- coding=utf-8 -*-
 # author: yanyang.xie@gmail.com
-import os
+import string
 import json
 import logging
 
@@ -30,7 +30,7 @@ def operation(request):
         op_tag = request.GET.get('op_tag')
         logger.debug("Operation:[id:%s, tag:%s]" %(op_id, op_tag))
         
-        command = _get_operation_command(op_id, op_tag)
+        command, vex_op_object = _get_operation_command(op_id, op_tag)
         logger.debug("Operation:[id:%s, tag:%s]. Command is %s" % (op_id, op_tag, command))
         if command == "":
             raise Exception("Not found command['%s']" %(op_tag))
@@ -48,7 +48,7 @@ def operation(request):
         
         logger.debug("Operation:[id:%s, tag:%s]. Command is %s, response is '%s'" % (op_id, op_tag, command, stdout))
         # You can dump a lot of structured data into a json object, such as lists and tuples
-        json_data = json.dumps({"status_code": 200, "message":"ok"})
+        json_data = json.dumps({"status_code": 200, "message": "Success to %s %s" %(op_tag.lower(), vex_op_object.name.lower())})
         return HttpResponse(json_data, content_type="application/json")
     except Exception, e:
         logger.error("Internal Server ERROR. Failed to execute [%s] operation. %s" %(op_tag, e))
@@ -107,4 +107,4 @@ def _get_operation_command(op_id, op_tag):
         command = vex_op_object.status_command
     elif op_tag == "result":
         command = vex_op_object.result_collect_command
-    return command
+    return command, vex_op_object
