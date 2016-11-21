@@ -71,6 +71,9 @@ redirect_stderr=true
 
 注意:supervisord默认管理的是非守护进程的程序，如果采用守护进程用supervisord启动的话，会出现backoff的错误或者exit too fast的错误。当需要采用supervisord进行守护程序的时候，在uwsgi配置文件或者参数中必须不能设置daemonize=/var/log/vextestui.log(此时的log文件使用的是setting.py中的log文件设置)
 
+supervisord的UI上可以启动和停止服务
+http://54.169.51.190:9001/
+
 5. 压力测试
 --------------------压力测试----------------------
 ab -c 100 -n 6000 http://127.0.0.1/
