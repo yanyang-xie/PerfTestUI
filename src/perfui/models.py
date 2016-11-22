@@ -1,10 +1,12 @@
 # -*- coding: UTF-8 -*-
 from django.db import models
 from perfui.utility.date_util import get_current_day_start_date
+from bson.json_util import default
 
 # choices = ['value', 'display name']
 CHOICES_PROJECT = [('VEX-Core', 'VEX-Core'), ('VEX-Frontend', 'VEX-Frontend')]
 CHOICES_TYPE = [('VOD_T6', 'T6VOD'), ('CDVR_T6', 'CDVR_T6'), ('LINEAR_T6', 'LINEAR_T6')]
+CHOICES_CONTENT_PREFIX = [('vod_test_', 'vod_test_'), ('t6_test_', 't6_test_'), ('cdvr_hot', 'cdvr_hot'), ('cdvr_fixed', 'cdvr_fixed'), ]
 
 class PerfTestResult(models.Model):
     project_name = models.CharField(max_length=100, choices=CHOICES_PROJECT, blank=False, null=False)
@@ -86,9 +88,11 @@ class PerfTestConfig(models.Model):
     session_number = models.IntegerField(blank=True, null=True, default=0)
     warm_up_minute = models.IntegerField(blank=False, null=False, default=0)
     
+    content_prefix = models.CharField(max_length=100, choices=CHOICES_CONTENT_PREFIX, blank=False, null=False, default=CHOICES_CONTENT_PREFIX[0][1])
+    
     def __unicode__(self):
-        return 'id:{}, project_name:{}, test_type:{}, content_size:{}, bitrate_number:{}, session_number:{}, warm_up_minute:{}'\
-                    .format(self.id, self.project_name, self.test_type, self.content_size, self.bitrate_number, self.session_number, self.warm_up_minute)
+        return 'id:{}, project_name:{}, test_type:{}, content_size:{}, bitrate_number:{}, session_number:{}, warm_up_minute:{}, content_prefix:{}'\
+                    .format(self.id, self.project_name, self.test_type, self.content_size, self.bitrate_number, self.session_number, self.warm_up_minute, self.content_prefix)
     
     class Meta:
         db_table = 'perf_config'
@@ -96,27 +100,35 @@ class PerfTestConfig(models.Model):
         get_latest_by = 'project_name'
         unique_together = ("project_name", "test_type",)
 
-class Operation(models.Model):
+class BasicOperation(models.Model):
     name = models.CharField(max_length=512, blank=False, null=False)
     start_command = models.CharField(max_length=512, blank=True, null=True)
     stop_command = models.CharField(max_length=512, blank=True, null=True)
     status_command = models.CharField(max_length=512, blank=True, null=True)
-    result_collect_command = models.CharField(max_length=512, blank=True, null=True)
     status_info = models.CharField(max_length=20, blank=True, null=True, default='')
     
     class Meta:
-        db_table = 'operation'
+        abstract = True
         
     def __unicode__(self):
         return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, result_collect_command:{}, status_info:{}'\
                     .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.result_collect_command, self.status_info)
 
-class VEXPerfTestOperation(Operation):
+class Operation(BasicOperation):
+    class Meta:
+        db_table = 'operation'
+        
+    def __unicode__(self):
+        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, status_info:{}'\
+                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.status_info)
+
+class VEXPerfTestOperation(BasicOperation):
+    result_collect_command = models.CharField(max_length=512, blank=True, null=True)
     perf_config = models.OneToOneField(PerfTestConfig, blank=True, null=True,)
     
     class Meta:
         db_table = 'perf_operation'
     
     def __unicode__(self):
-        return 'id:{}, name:{}, perf_config:[{}]'.format(self.id, self.name, self.perf_config)
+        return 'id:{}, name:{}, result_collect_command:{}, perf_config:[{}]'.format(self.id, self.name, self.result_collect_command, self.perf_config)
     

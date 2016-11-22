@@ -1,0 +1,16 @@
+[uwsgi]
+http=:8000
+chdir=/home/yanyang/PerfTestUI/src   #注意,这个文件夹必须是项目的根目录(src, 就是项目包的根)
+wsgi-file=PerfTestUI/wsgi.py
+master=true
+processes=8
+threads=8
+buffer-size=32768
+reload-mercy=8
+max-requests=5000
+py-autoreload=3 #如果有文件更新，自动重启服务
+#daemonize=/var/log/perftestui.log
+py-autoreload=3 #实现和django自带server一样更新文件自动重启功能
+
+#socket=/test/myapp.sock
+#pidfile=/var/run/uwsgi.pid

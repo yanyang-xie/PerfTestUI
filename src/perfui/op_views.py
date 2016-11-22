@@ -1,20 +1,19 @@
 # -*- coding=utf-8 -*-
 # author: yanyang.xie@gmail.com
-import string
 import json
 import logging
 
 from django.http.response import HttpResponse, HttpResponseServerError, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404
 
-from perfui.models import VEXPerfTestOperation
+from perfui.models import VEXPerfTestOperation, Operation
+
 
 logger = logging.getLogger(__name__)
 
 def index(request):
-    all_operation_list = VEXPerfTestOperation.objects.all()
-    vex_operation_list = all_operation_list.filter(perf_config__isnull=False)
-    operation_list = all_operation_list.filter(perf_config__isnull=True)
+    vex_operation_list = VEXPerfTestOperation.objects.filter(perf_config__isnull=False)
+    operation_list = Operation.objects.all()
     
     # operation list will be separated to 3 tables
     operation_list_1 = operation_list[::3]
