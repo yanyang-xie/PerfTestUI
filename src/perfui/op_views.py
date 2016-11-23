@@ -35,15 +35,11 @@ def operation(request):
             raise Exception("Not found command['%s']" %(op_tag))
         
         stdout, stderr = execute_command(command, obj.timeout)
-        logger.info("1")
         if stdout is None:
-            logger.info("2")
             logger.error("Timeout to execute ['%s'] operation." %(op_tag))
             json_data = json.dumps({"status_code": 500, "message":"Timeout to execute ['%s'] operation." %(op_tag)})
-            logger.info("3")
             return HttpResponse(json_data, content_type="application/json")
         
-        logger.info("4")
         if stderr is not None and len(stderr) > 0:
             logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr)))
             json_data = json.dumps({"status_code": 500, "message":"Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr[-1]).replace('\n', ''))})
