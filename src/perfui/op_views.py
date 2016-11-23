@@ -82,19 +82,24 @@ def update_operation_config(request):
         response = HttpResponseServerError('Server ERROR')
         return response
 
-def execute_command(command, timeout=30, is_shell=True): 
+def execute_command(command, timeout=30, is_shell=True):
+    import subprocess
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=is_shell) 
+    return process.stdout.readlines(),process.stderr.readlines() 
+
+def execute_command_older(command, timeout=30, is_shell=True): 
     """call shell-command and either return its output or kill it 
     if it doesn't normally exit within timeout seconds and return None""" 
     import subprocess, datetime, os, time, signal  
     start = datetime.datetime.now()
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=is_shell)  
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=is_shell) 
     while process.poll() is None:
         time.sleep(.5)
         now = datetime.datetime.now()
         if (now - start).seconds> timeout:
             logger.warn("Timeout[%s] to run [%s], return" %(timeout, command))
-            #os.kill(process.pid, signal.SIGKILL)
-            #os.waitpid(-1, os.WNOHANG)
+            os.kill(process.pid, signal.SIGKILL)
+            os.waitpid(-1, os.WNOHANG)
             return None,["Timeout[%s]" %(timeout), ]
     return process.stdout.readlines(),process.stderr.readlines()
 
