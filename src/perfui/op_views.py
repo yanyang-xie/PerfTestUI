@@ -15,12 +15,11 @@ def index(request):
     vex_operation_list = VEXPerfTestOperation.objects.filter(perf_config__isnull=False)
     operation_list = Operation.objects.all()
     
-    # operation list will be separated to 3 tables
-    operation_list_1 = operation_list[::3]
-    operation_list_2 = operation_list[1::3]
-    operation_list_3 = operation_list[2::3]
+    # operation list will be separated to 2 tables
+    operation_list_1 = operation_list[::2]
+    operation_list_2 = operation_list[1::2]
     
-    context = {'vex_operation_list': vex_operation_list, 'operation_list':[operation_list_1, operation_list_2, operation_list_3]}
+    context = {'vex_operation_list': vex_operation_list, 'operation_list':[operation_list_1, operation_list_2]}
     return render_to_response('perfui/operation.html', context)
 
 def operation(request):
