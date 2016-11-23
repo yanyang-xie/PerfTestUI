@@ -91,8 +91,9 @@ def execute_command(command, timeout=30, is_shell=True):
         now = datetime.datetime.now()  
         if (now - start).seconds> timeout:  
             os.kill(process.pid, signal.SIGKILL)  
-            os.waitpid(-1, os.WNOHANG)  
-            return None,None
+            os.waitpid(-1, os.WNOHANG)
+            logger.warn("Timeout[%s] to run [%s]" %(timeout, command))
+            return None,"Timeout[%s] to run [%s]" %(timeout, command)
     return process.stdout.readlines(),process.stderr.readlines()
 
 def _get_operation_command(op_id, op_tag, is_vex_operation):

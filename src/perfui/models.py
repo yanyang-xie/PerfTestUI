@@ -105,7 +105,7 @@ class BasicOperation(models.Model):
     stop_command = models.CharField(max_length=512, blank=True, null=True)
     status_command = models.CharField(max_length=512, blank=True, null=True)
     status_info = models.CharField(max_length=20, blank=True, null=True, default='')
-    timeout = models.IntegerField(blank=False, null=False, default=30)
+    timeout = models.IntegerField(blank=False, null=False, default=300)
     
     class Meta:
         abstract = True
