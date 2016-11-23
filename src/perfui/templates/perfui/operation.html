@@ -169,7 +169,7 @@
 				     </tr>
 				</thead>
 				<tbody>
-				    {% for vex_operation in sub_operation_list %}
+				    {% for basic_operation in sub_operation_list %}
 				    {% if forloop.counter|divisibleby:"2" %}
 					    <tr class="success text-center">
 					{% elif forloop.counter|divisibleby:"3" %}
@@ -177,20 +177,20 @@
 					{% else %}
 					    <tr class="warning text-center">
 					{% endif %}
-			            <td class='text-left'>{{ vex_operation.name }}</td>
+			            <td class='text-left'>{{ basic_operation.name }}</td>
 			            <td class='text-left'>
-			            	{% if vex_operation.start_command %}
-			            		{% if vex_operation.stop_command %}
-			            			<button type="button" id="btn_start_{{vex_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}', 'false')">Start</button>
+			            	{% if basic_operation.start_command %}
+			            		{% if basic_operation.stop_command %}
+			            			<button type="button" id="btn_start_op_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_op_{{basic_operation.id}}', 'false')">Start</button>
 								{% else %}
-									<button type="button" id="btn_start_{{vex_operation.id}}" class="btn btn-success" data-loading-text="Running" autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}', 'false')">Run</button>
+									<button type="button" id="btn_start_op_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Running" autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_op_{{basic_operation.id}}', 'false')">Run</button>
 								{% endif %}
 							{% endif %}
-							{% if vex_operation.stop_command %}
-								<button type="button" id="btn_stop_{{vex_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{vex_operation.id}}','btn_stop_{{vex_operation.id}}', 'false')">Stop</button>
+							{% if basic_operation.stop_command %}
+								<button type="button" id="btn_stop_op_{{basic_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_op_{{basic_operation.id}}', 'false')">Stop</button>
 							{% endif%}
-							{% if vex_operation.status_command %}
-								<button type="button" id="btn_status_{{vex_operation.id}}" class="btn btn-warning" data-loading-text="Getting status..." onclick="operation('status','{{vex_operation.id}}','btn_status_{{vex_operation.id}}', 'false')">Status</button>
+							{% if basic_operation.status_command %}
+								<button type="button" id="btn_status_op_{{basic_operation.id}}" class="btn btn-warning" data-loading-text="Getting status..." onclick="operation('status','{{basic_operation.id}}','btn_status_op_{{basic_operation.id}}', 'false')">Status</button>
 							{% endif%}
 			            </td>
 			        </tr>
