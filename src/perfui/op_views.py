@@ -27,9 +27,10 @@ def operation(request):
     try:
         op_id = request.GET.get('op_id')
         op_tag = request.GET.get('op_tag')
-        logger.debug("Operation:[id:%s, tag:%s]" %(op_id, op_tag))
+        vex_op = request.GET.get('vex_op')
+        logger.debug("Operation:[id:%s, tag:%s, is_vex_op:%s]" %(op_id, op_tag, vex_op))
         
-        command, vex_op_object = _get_operation_command(op_id, op_tag)
+        command, obj = _get_operation_command(op_id, op_tag, vex_op)
         logger.debug("Operation:[id:%s, tag:%s]. Command is %s" % (op_id, op_tag, command))
         if command == "":
             raise Exception("Not found command['%s']" %(op_tag))
@@ -47,7 +48,7 @@ def operation(request):
         
         logger.debug("Operation:[id:%s, tag:%s]. Command is %s, response is '%s'" % (op_id, op_tag, command, stdout))
         # You can dump a lot of structured data into a json object, such as lists and tuples
-        json_data = json.dumps({"status_code": 200, "message": "Success to %s %s" %(op_tag.lower(), vex_op_object.name.lower())})
+        json_data = json.dumps({"status_code": 200, "message": "Success to %s %s" %(op_tag.lower(), obj.name.lower())})
         return HttpResponse(json_data, content_type="application/json")
     except Exception, e:
         logger.error("Internal Server ERROR. Failed to execute [%s] operation. %s" %(op_tag, e))
@@ -95,15 +96,19 @@ def execute_command(command, timeout=30, is_shell=True):
             return None,None
     return process.stdout.readlines(),process.stderr.readlines()
 
-def _get_operation_command(op_id, op_tag):
-    vex_op_object = get_object_or_404(VEXPerfTestOperation, pk=op_id)
+def _get_operation_command(op_id, op_tag, is_vex_operation):
+    if is_vex_operation == 'true':
+        obj = get_object_or_404(VEXPerfTestOperation, pk=op_id)
+    else:
+        obj = get_object_or_404(Operation, pk=op_id)
+        
     command = ""
     if op_tag == "start":
-        command = vex_op_object.start_command
+        command = obj.start_command
     elif op_tag == "stop":
-        command = vex_op_object.stop_command
+        command = obj.stop_command
     elif op_tag == "status":
-        command = vex_op_object.status_command
+        command = obj.status_command
     elif op_tag == "result":
-        command = vex_op_object.result_collect_command
-    return command, vex_op_object
+        command = obj.result_collect_command
+    return command, obj
