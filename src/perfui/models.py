@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 from django.db import models
 from perfui.utility.date_util import get_current_day_start_date
+from bson.json_util import default
 
 # choices = ['value', 'display name']
 CHOICES_PROJECT = [('VEX-Core', 'VEX-Core'), ('VEX-Frontend', 'VEX-Frontend')]
@@ -105,6 +106,7 @@ class BasicOperation(models.Model):
     stop_command = models.CharField(max_length=512, blank=True, null=True)
     status_command = models.CharField(max_length=512, blank=True, null=True)
     status_info = models.CharField(max_length=20, blank=True, null=True, default='')
+    timeout = models.IntegerField(blank=False, null=False, default=30)
     
     class Meta:
         abstract = True

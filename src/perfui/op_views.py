@@ -35,7 +35,7 @@ def operation(request):
         if command == "":
             raise Exception("Not found command['%s']" %(op_tag))
         
-        stdout, stderr = execute_command(command, 20)
+        stdout, stderr = execute_command(command, obj.timeout)
         if stdout is None:
             logger.error("Timeout to execute ['%s'] operation." %(op_tag))
             json_data = json.dumps({"status_code": 500, "message":"Timeout to execute ['%s'] operation." %(op_tag)})

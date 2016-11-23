@@ -180,15 +180,11 @@
 			            <td>{{ vex_operation.name }}</td>
 			            <td class='text-left'>
 			            	{% if vex_operation.start_command %}
-			            		<button type="button" id="btn_start_{{vex_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}', 'false')">
-								
-			            	
 			            		{% if vex_operation.stop_command %}
-			            			Start
+			            			<button type="button" id="btn_start_{{vex_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}', 'false')">Start</button>
 								{% else %}
-									Run
+									<button type="button" id="btn_start_{{vex_operation.id}}" class="btn btn-success" data-loading-text="Running" autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}', 'false')">Run</button>
 								{% endif %}
-								</button>
 							{% endif %}
 							{% if vex_operation.stop_command %}
 								<button type="button" id="btn_stop_{{vex_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{vex_operation.id}}','btn_stop_{{vex_operation.id}}', 'false')">Stop</button>
