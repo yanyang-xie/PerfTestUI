@@ -30,17 +30,12 @@ def operation(request):
         logger.debug("Operation:[id:%s, tag:%s, is_vex_op:%s]" %(op_id, op_tag, vex_op))
         
         command, obj = _get_operation_command(op_id, op_tag, vex_op)
-        logger.debug("Operation:[id:%s, tag:%s]. Command is %s" % (op_id, op_tag, command))
+        logger.debug("Operation:[id:%s, tag:%s]. Command is [%s]" % (op_id, op_tag, command))
         if command == "":
             raise Exception("Not found command['%s']" %(op_tag))
         
         stdout, stderr = execute_command(command, obj.timeout)
-        '''
-        if stdout is None:
-            logger.error("Timeout to execute ['%s'] operation. Please check the running status manually." %(op_tag))
-            json_data = json.dumps({"status_code": 500, "message":"Timeout to execute ['%s'] operation. Please check the running status manually." %(op_tag)})
-            return HttpResponse(json_data, content_type="application/json")
-        '''
+        
         if stderr is not None and len(stderr) > 0:
             logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr)))
             json_data = json.dumps({"status_code": 500, "message":"Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr[-1]).replace('\n', ''))})
@@ -49,7 +44,7 @@ def operation(request):
         
         logger.info("Operation:[id:%s, tag:%s]. Command is %s, response is '%s'" % (op_id, op_tag, command, stdout))
         # You can dump a lot of structured data into a json object, such as lists and tuples
-        json_data = json.dumps({"status_code": 200, "message": "Success to %s %s" %(op_tag.lower(), obj.name.lower())})
+        json_data = json.dumps({"status_code": 200, "message": "Success to execute %s [%s]" %(op_tag.lower(), obj.name.lower())})
         return HttpResponse(json_data, content_type="application/json")
     except Exception, e:
         logger.error("Internal Server ERROR. Failed to execute [%s] operation. %s" %(op_tag, e))

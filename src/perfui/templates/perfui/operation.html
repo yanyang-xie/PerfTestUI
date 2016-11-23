@@ -51,30 +51,43 @@
 	}
 	
 	function operation(op_tag, op_id, btn_id, is_vex_operation){
+		var timeout = 60000;
+		
 		var btn = $("#" + btn_id);
 		btn.button('loading');
-		//setTimeout(function () { btn.button('reset'); },2000);
-		
-		$.getJSON("/op/execute?op_tag=" + op_tag + "&op_id=" + op_id + "&vex_op=" + is_vex_operation,
-		    function(data)
-	        {
-				if(data["status_code"] == 200){
-					bootbox.alert({
-						title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Succeed</p>",
-						message: "<p><strong class='text-success'>" + data["message"] + "</p>",
-					    size: 'large'
-					});
-					btn.button('reset');
-				}else{
-					bootbox.alert({
-						title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Failure</p>",
-						message: "<p><strong class='text-danger'>" + data["message"] + "</p>",
-					    size: 'large'
-					});
-					btn.button('reset');
-				}
-	        }
+		setTimeout(function () {
+				bootbox.alert({
+					title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Failure</p>",
+					message: "<p><strong class='text-danger'>Operation timeout. Please check status manually.</p>",
+				    size: 'large'
+				});
+				btn.button('reset');
+			},timeout
 		);
+		
+		$.ajax({ 
+	           type: "get", 
+               url: "/op/execute?op_tag=" + op_tag + "&op_id=" + op_id + "&vex_op=" + is_vex_operation,
+               dataType: "json",
+               timeout:timeout,
+               success: function (data) { 
+            	   if(data["status_code"] == 200){
+	   					bootbox.alert({
+	   						title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Succeed</p>",
+	   						message: "<p><strong class='text-success'>" + data["message"] + "</p>",
+	   					    size: 'large'
+	   					});
+	   					btn.button('reset');
+	   				}else{
+	   					bootbox.alert({
+	   						title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Failure</p>",
+	   						message: "<p><strong class='text-danger'>" + data["message"] + "</p>",
+	   					    size: 'large'
+	   					});
+	   					btn.button('reset');
+	   				}
+               }
+       });
 	}
 </script>
 {% endblock%}
