@@ -36,8 +36,8 @@ def operation(request):
         
         stdout, stderr = execute_command(command, obj.timeout)
         if stdout is None:
-            logger.error("Timeout to execute ['%s'] operation." %(op_tag))
-            json_data = json.dumps({"status_code": 500, "message":"Timeout to execute ['%s'] operation." %(op_tag)})
+            logger.error("Timeout to execute ['%s'] operation. Please check the running status manually." %(op_tag))
+            json_data = json.dumps({"status_code": 500, "message":"Timeout to execute ['%s'] operation. Please check the running status manually." %(op_tag)})
             return HttpResponse(json_data, content_type="application/json")
         
         if stderr is not None and len(stderr) > 0:
@@ -93,10 +93,9 @@ def execute_command(command, timeout=30, is_shell=True):
         
         logger.info("Command [%s] has been running %s seconds. Timeout is %s" %(command, (now - start).seconds, timeout )) 
         if (now - start).seconds> timeout:
-            logger.warn("Timeout[%s] to run [%s], shut down process" %(timeout, command)) 
-            os.kill(process.pid, signal.SIGKILL)  
-            os.waitpid(-1, os.WNOHANG)
-            logger.warn("Timeout[%s] to run [%s], shut over." %(timeout, command)) 
+            logger.warn("Timeout[%s] to run [%s], return" %(timeout, command)) 
+            #os.kill(process.pid, signal.SIGKILL)  
+            #os.waitpid(-1, os.WNOHANG)
             return None,None
     return process.stdout.readlines(),process.stderr.readlines()
 
