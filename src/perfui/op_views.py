@@ -87,12 +87,16 @@ def execute_command(command, timeout=30, is_shell=True):
     start = datetime.datetime.now()
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=is_shell)  
     while process.poll() is None:  
-        time.sleep(0.2)  
+        time.sleep(1) 
+        logger.info("Command has been running [%s] to run [%s]" %(timeout, command)) 
         now = datetime.datetime.now()  
-        if (now - start).seconds> timeout:  
+        
+        logger.info("Command [%s] has been running %s seconds. Timeout is %s" %(command, (now - start).seconds, timeout )) 
+        if (now - start).seconds> timeout:
+            logger.warn("Timeout[%s] to run [%s], shut down process" %(timeout, command)) 
             os.kill(process.pid, signal.SIGKILL)  
             os.waitpid(-1, os.WNOHANG)
-            logger.warn("Timeout[%s] to run [%s]" %(timeout, command))
+            logger.warn("Timeout[%s] to run [%s], shut over." %(timeout, command)) 
             return None,"Timeout[%s] to run [%s]" %(timeout, command)
     return process.stdout.readlines(),process.stderr.readlines()
 
