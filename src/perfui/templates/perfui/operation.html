@@ -183,7 +183,7 @@
 			            		{% if basic_operation.stop_command %}
 			            			<button type="button" id="btn_start_op_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_op_{{basic_operation.id}}', 'false')">Start</button>
 								{% else %}
-									<button type="button" id="btn_start_op_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Running" autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_op_{{basic_operation.id}}', 'false')">Run</button>
+									<button type="button" id="btn_start_op_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Running" autocomplete="off" onclick="operation('run','{{basic_operation.id}}','btn_start_op_{{basic_operation.id}}', 'false')">Run</button>
 								{% endif %}
 							{% endif %}
 							{% if basic_operation.stop_command %}

@@ -35,14 +35,16 @@ def operation(request):
             raise Exception("Not found command['%s']" %(op_tag))
         
         stdout, stderr = execute_command(command, obj.timeout)
+        '''
         if stdout is None:
             logger.error("Timeout to execute ['%s'] operation. Please check the running status manually." %(op_tag))
             json_data = json.dumps({"status_code": 500, "message":"Timeout to execute ['%s'] operation. Please check the running status manually." %(op_tag)})
             return HttpResponse(json_data, content_type="application/json")
-        
+        '''
         if stderr is not None and len(stderr) > 0:
             logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr)))
             json_data = json.dumps({"status_code": 500, "message":"Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr[-1]).replace('\n', ''))})
+            logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr[-1]).replace('\n', '')))
             return HttpResponse(json_data, content_type="application/json")
         
         logger.info("Operation:[id:%s, tag:%s]. Command is %s, response is '%s'" % (op_id, op_tag, command, stdout))
@@ -80,23 +82,20 @@ def update_operation_config(request):
         response = HttpResponseServerError('Server ERROR')
         return response
 
-def execute_command(command, timeout=30, is_shell=True):  
+def execute_command(command, timeout=30, is_shell=True): 
     """call shell-command and either return its output or kill it 
     if it doesn't normally exit within timeout seconds and return None""" 
     import subprocess, datetime, os, time, signal  
     start = datetime.datetime.now()
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=is_shell)  
-    while process.poll() is None:  
-        time.sleep(1) 
-        logger.info("Command has been running [%s] to run [%s]" %(timeout, command)) 
-        now = datetime.datetime.now()  
-        
-        logger.info("Command [%s] has been running %s seconds. Timeout is %s" %(command, (now - start).seconds, timeout )) 
+    while process.poll() is None:
+        time.sleep(.5)
+        now = datetime.datetime.now()
         if (now - start).seconds> timeout:
-            logger.warn("Timeout[%s] to run [%s], return" %(timeout, command)) 
-            #os.kill(process.pid, signal.SIGKILL)  
+            logger.warn("Timeout[%s] to run [%s], return" %(timeout, command))
+            #os.kill(process.pid, signal.SIGKILL)
             #os.waitpid(-1, os.WNOHANG)
-            return None,None
+            return None,["Timeout[%s]" %(timeout), ]
     return process.stdout.readlines(),process.stderr.readlines()
 
 def _get_operation_command(op_id, op_tag, is_vex_operation):
@@ -106,7 +105,7 @@ def _get_operation_command(op_id, op_tag, is_vex_operation):
         obj = get_object_or_404(Operation, pk=op_id)
         
     command = ""
-    if op_tag == "start":
+    if op_tag == "start" or op_tag == "run":
         command = obj.start_command
     elif op_tag == "stop":
         command = obj.stop_command
