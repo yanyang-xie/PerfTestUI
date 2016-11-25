@@ -55,15 +55,6 @@
 		
 		var btn = $("#" + btn_id);
 		btn.button('loading');
-		setTimeout(function () {
-				bootbox.alert({
-					title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Failure</p>",
-					message: "<p><strong class='text-danger'>Operation timeout. Please check status manually.</p>",
-				    size: 'large'
-				});
-				btn.button('reset');
-			},timeout
-		);
 		
 		$.ajax({ 
 	           type: "get", 
@@ -86,6 +77,14 @@
 	   					});
 	   					btn.button('reset');
 	   				}
+               },
+               error: function(){
+            	   bootbox.alert({
+	   					title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Failure</p>",
+	   					message: "<p><strong class='text-danger'>Operation timeout. Please check status manually.</p>",
+	   				    size: 'large'
+	   				});
+	   				btn.button('reset');
                }
        });
 	}
