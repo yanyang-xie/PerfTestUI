@@ -64,12 +64,13 @@ def _get_result_context(request, test_type):
         context.update(_get_test_scenario_context(test_result))
         context.update(_get_result_error_details_context(test_result))
         
-        if test_type == 'CDVR_T6':
+        if test_type.find('VOD') < 0:
+            context['client_number'] = context['request_total']
+        
+        if test_type.find('CDVR') > -1:
             context['asset_number'] = context['client_number']
     else:
-        context.update({'no_result': True, 
-                        
-                        })
+        context.update({'no_result': True, })
     return context
     
 def _get_result_summary_context(test_result):
@@ -85,6 +86,7 @@ def _get_result_summary_context(test_result):
     result_context['request_concurrent'] = (index_perf_result.request_concurrent + 1 ) / test_result.instance_number
     result_context.update({'index_response_average_response': index_perf_result.response_average_time,
                     'index_request_succeed_rate':index_perf_result.request_succeed_rate,
+                    'request_total':index_perf_result.request_total,
                     })
         
     bitrate_perf_result = VEXPerfTestResult(test_result.bitrate_summary)
@@ -112,7 +114,13 @@ def _get_result_error_details_context(test_result):
         if error_info.strip() == '':
             continue
         
-        ip, error_msg = error_info.split(':')
+        error_info = str(error_info).replace('str:', '')
+        print error_info
+        sep_position = error_info.find(':')
+        ip = error_info[:sep_position]
+        error_msg = error_info[sep_position + 1:]
+        
+        #ip, error_msg = error_info.split(':')
         error_dict[str(ip.strip())] = str(error_msg.strip())
         
         if len(error_dict) >= 10:
