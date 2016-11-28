@@ -46,7 +46,11 @@
 <style>
     #myModal
     {
-        top:15%;
+        top:3%;
+        height:88%;
+        overflow:scroll;
+        overflow-x:auto;
+        overflow-y:auto 
     }
 </style>
 {% endblock%}
@@ -236,7 +240,7 @@
 
 	<!-- 模态框（Modal） -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	    <div class="modal-dialog" style="width:800px;">
+	    <div class="modal-dialog" style="width:900px;">
 	        <div class="modal-content">
 	            <div class="modal-header">
 	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -261,7 +265,15 @@
 						  	 <tr class="success">
 						 {%endif%}
 								  <td>{{ ip }}</td>
-								  <td>{{ error_info }}</td>
+								  <td>
+								  	  {% for error in error_info %}
+								  	      {% if forloop.first %}
+								  	  	      {{ error }}
+								  	      {% else %}
+								  	          <br>{{ error }}</br>
+								  	      {%endif%}
+								  	  {% endfor %}
+								  </td>
 							  </tr>
 					   {% endfor%}
 					</table>

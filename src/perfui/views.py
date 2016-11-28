@@ -118,10 +118,10 @@ def _get_result_error_details_context(test_result):
         print error_info
         sep_position = error_info.find(':')
         ip = error_info[:sep_position]
-        error_msg = error_info[sep_position + 1:]
+        error_msg = str(error_info[sep_position + 1:].strip())
+        error_list = error_msg.split('\t')
         
-        #ip, error_msg = error_info.split(':')
-        error_dict[str(ip.strip())] = str(error_msg.strip())
+        error_dict[str(ip.strip())] = error_list
         
         if len(error_dict) >= 10:
             break
