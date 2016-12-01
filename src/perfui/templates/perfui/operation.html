@@ -50,7 +50,7 @@
 		return str;
 	}
 	
-	function operation(op_tag, op_id, btn_id, is_vex_operation){
+	function operation(op_tag, op_id, btn_id, is_vex_operation, test_type){
 		var timeout = 120000;
 		
 		var btn = $("#" + btn_id);
@@ -63,12 +63,16 @@
                timeout:timeout,
                success: function (data) { 
             	   if(data["status_code"] == 200){
-	   					bootbox.alert({
-	   						title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Succeed</p>",
-	   						message: "<p><strong class='text-success'>" + data["message"] + "</p>",
-	   					    size: 'large'
-	   					});
-	   					btn.button('reset');
+            		   if (op_tag == "result"){
+            			    window.location = "/result/" + test_type;
+            		   }else{
+		   					bootbox.alert({
+		   						title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Succeed</p>",
+		   						message: "<p><strong class='text-success'>" + data["message"] + "</p>",
+		   					    size: 'large'
+		   					});
+		   					btn.button('reset');
+            	        }
 	   				}else{
 	   					bootbox.alert({
 	   						title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Failure</p>",
@@ -141,16 +145,16 @@
 		            <td><a href="#" id="warm_up_minute" name="warm_up_minute" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.warm_up_minute }}</a> Minute</td>
 		            <td class='mytd text-left'>
 		            	{% if vex_operation.start_command%}
-		            		<button type="button" id="btn_start_{{vex_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}', 'true')">Start</button>
+		            		<button type="button" id="btn_start_{{vex_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}')">Start</button>
 						{% endif %}
 						{% if vex_operation.stop_command %}
-						    <button type="button" id="btn_stop_{{vex_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{vex_operation.id}}','btn_stop_{{vex_operation.id}}', 'true')">Stop</button>
+						    <button type="button" id="btn_stop_{{vex_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{vex_operation.id}}','btn_stop_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}')">Stop</button>
 						{% endif%}
 						{% if vex_operation.status_command %}
-							<button type="button" id="btn_status_{{vex_operation.id}}" class="btn btn-warning" data-loading-text="Getting status..." onclick="operation('status','{{vex_operation.id}}','btn_status_{{vex_operation.id}}', 'true')">Status</button>
+							<button type="button" id="btn_status_{{vex_operation.id}}" class="btn btn-warning" data-loading-text="Getting status..." onclick="operation('status','{{vex_operation.id}}','btn_status_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}')">Status</button>
 						{% endif%}
 						{% if vex_operation.result_collect_command %}
-							<button type="button" id="btn_result_{{vex_operation.id}}" class="btn btn-info" data-loading-text="Collecting..." onclick="operation('result','{{vex_operation.id}}','btn_result_{{vex_operation.id}}', 'true')">Result</button>
+							<button type="button" id="btn_result_{{vex_operation.id}}" class="btn btn-info" data-loading-text="Collecting..." onclick="operation('result','{{vex_operation.id}}','btn_result_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}')">Result</button>
 						{% endif%}
 		            </td>
 		        </tr>
@@ -193,16 +197,16 @@
 			            <td class='text-left'>
 			            	{% if basic_operation.start_command %}
 			            		{% if basic_operation.stop_command %}
-			            			<button type="button" id="btn_start_op_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_op_{{basic_operation.id}}', 'false')">Start</button>
+			            			<button type="button" id="btn_start_op_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_op_{{basic_operation.id}}', 'false','')">Start</button>
 								{% else %}
-									<button type="button" id="btn_start_op_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Running" autocomplete="off" onclick="operation('run','{{basic_operation.id}}','btn_start_op_{{basic_operation.id}}', 'false')">Run</button>
+									<button type="button" id="btn_start_op_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Running" autocomplete="off" onclick="operation('run','{{basic_operation.id}}','btn_start_op_{{basic_operation.id}}', 'false','')">Run</button>
 								{% endif %}
 							{% endif %}
 							{% if basic_operation.stop_command %}
-								<button type="button" id="btn_stop_op_{{basic_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_op_{{basic_operation.id}}', 'false')">Stop</button>
+								<button type="button" id="btn_stop_op_{{basic_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_op_{{basic_operation.id}}', 'false','')">Stop</button>
 							{% endif%}
 							{% if basic_operation.status_command %}
-								<button type="button" id="btn_status_op_{{basic_operation.id}}" class="btn btn-warning" data-loading-text="Getting status..." onclick="operation('status','{{basic_operation.id}}','btn_status_op_{{basic_operation.id}}', 'false')">Status</button>
+								<button type="button" id="btn_status_op_{{basic_operation.id}}" class="btn btn-warning" data-loading-text="Getting status..." onclick="operation('status','{{basic_operation.id}}','btn_status_op_{{basic_operation.id}}', 'false','')">Status</button>
 							{% endif%}
 			            </td>
 			        </tr>
