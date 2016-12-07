@@ -87,6 +87,7 @@ def _get_result_summary_context(test_result):
     result_context.update({'index_response_average_response': index_perf_result.response_average_time,
                     'index_request_succeed_rate':index_perf_result.request_succeed_rate,
                     'request_total':index_perf_result.request_total,
+                    'test_duration':index_perf_result.test_duration,
                     })
         
     bitrate_perf_result = VEXPerfTestResult(test_result.bitrate_summary)
