@@ -104,23 +104,23 @@ class BasicOperation(models.Model):
     start_command = models.CharField(max_length=512, blank=True, null=True)
     stop_command = models.CharField(max_length=512, blank=True, null=True)
     status_command = models.CharField(max_length=512, blank=True, null=True)
-    status_info = models.CharField(max_length=20, blank=True, null=True, default='')
-    timeout = models.IntegerField(blank=False, null=False, default=300)
+    status_flag = models.BooleanField(default=False)
+    timeout = models.IntegerField(blank=False, null=False, default=120)
     
     class Meta:
         abstract = True
         
     def __unicode__(self):
-        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, result_collect_command:{}, status_info:{}'\
-                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.result_collect_command, self.status_info)
+        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, result_collect_command:{}, status_flag:{}'\
+                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.result_collect_command, self.status_flag)
 
 class Operation(BasicOperation):
     class Meta:
         db_table = 'operation'
         
     def __unicode__(self):
-        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, status_info:{}'\
-                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.status_info)
+        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, status_flag:{}'\
+                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.status_flag)
 
 class VEXPerfTestOperation(BasicOperation):
     result_collect_command = models.CharField(max_length=512, blank=True, null=True)

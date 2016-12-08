@@ -7,6 +7,7 @@ from django.http.response import HttpResponse, HttpResponseServerError, HttpResp
 from django.shortcuts import render_to_response, get_object_or_404
 
 from perfui.models import VEXPerfTestOperation, Operation
+from cgi import log
 
 
 logger = logging.getLogger(__name__)
@@ -76,6 +77,26 @@ def update_operation_config(request):
         logger.error('Failed to save the change. %s' %e)
         response = HttpResponseServerError('Server ERROR')
         return response
+
+def vex_perf_test_status(request):
+    status_list = []
+    
+    vex_operation_list = VEXPerfTestOperation.objects.all()
+    for vex_op in vex_operation_list:
+        status_command = vex_op.status_command
+        if status_command is not None:
+            stdout, stderr = execute_command(status_command)
+        
+            if stderr is None or len(stderr) == 0:
+                status_list.append({'id':vex_op.id, 'status': 0})
+            else:
+                status_list.append({'id':vex_op.id, 'status': 1})
+        else:
+            status_list.append({'id':vex_op.id, 'status': 2})
+    
+    json_data = json.dumps(status_list)
+    logger.debug('VEX operation status: %s' %(json_data))
+    return HttpResponse(json_data, content_type="application/json")
 
 def execute_command(command, timeout=30, is_shell=True):
     import subprocess

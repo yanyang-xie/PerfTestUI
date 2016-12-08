@@ -39,8 +39,29 @@
 		    {
 		        //alert(response);
 		    }
-	     });
+	    });
+	     
+	    setInterval("getVEXPerfTestStatus()", 3000);  
 	});
+	
+	function getVEXPerfTestStatus() {
+		//$("#vex_op_status_1").html("456456");
+        $.ajax({  
+            url: "/op/perfstatus",  
+            type: 'Get',            
+            success: function (data) {  
+            	for(var o in data){
+            		//alert("id:"+data[o].id+" status:"+data[o].status );  
+            		if (data[o].status == 0){
+            			$("#vex_op_status_" + data[o].id).html("Running");
+            		}else if (data[o].status == 1){
+            			$("#vex_op_status_" + data[o].id).html("Stopped");
+            		}else{
+            		}
+                  } 
+            }  
+        });  
+    }  
 	
 	function ucfirst(str) {
 		var str = str.toLowerCase();
@@ -80,6 +101,7 @@
 	   					    size: 'large'
 	   					});
 	   					btn.button('reset');
+	   					btn.button()
 	   				}
                },
                error: function(){
@@ -104,11 +126,12 @@
 			<colgroup>
 				<col style="width:10%">
 				<col style="width:10%">
-				<col style="width:10%">
-				<col style="width:10%">
-				<col style="width:12%">
-				<col style="width:12%">
-				<col style="width:30%">
+				<col style="width:8%">
+				<col style="width:8%">
+				<col style="width:8%">
+				<col style="width:5%">
+				<col style="width:5%">
+				<col style="width:20%">
 			</colgroup>
 			<thead>
 			    <tr>
@@ -118,6 +141,7 @@
 			      <th class='text-center'>Bitrate No.</th>
 			      <th class='text-center'>Session No.</th>
 			      <th class='text-center'>Warm Up</th>
+			      <th class='text-center'>Status</th>
 			      <th class='text-center'>Operation</th>
 			     </tr>
 			</thead>
@@ -131,7 +155,7 @@
 				{% else %}
 				    <tr class="warning text-center">
 				{% endif %}
-		            <td class="">{{ vex_operation.name }}</td>
+		            <td>{{ vex_operation.name }}</td>
 		            <td>{{ vex_operation.perf_config.test_type }}</td>
 		            <td><a href="#" id="content_size" name="content_size" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.content_size }}</a></td>
 		            <td><a href="#" id="bitrate_number" name="bitrate_number" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.bitrate_number }}</a></td>
@@ -142,16 +166,20 @@
 		            		Session
 		            	{% endifequal %}
 		            </td>
-		            <td><a href="#" id="warm_up_minute" name="warm_up_minute" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.warm_up_minute }}</a> Minute</td>
+		            <td><a href="#" id="warm_up_minute" name="warm_up_minute" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.warm_up_minute }}</a> Minutes</td>
+		            <td id="vex_op_status_{{vex_operation.id}}" >
+			            {% if vex_operation.status_flag %}
+			            	Running
+			            {% else %}
+			            	Stopped
+			            {% endif %}
+		            </td>
 		            <td class='mytd text-left'>
 		            	{% if vex_operation.start_command%}
 		            		<button type="button" id="btn_start_{{vex_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{vex_operation.id}}','btn_start_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}')">Start</button>
 						{% endif %}
 						{% if vex_operation.stop_command %}
 						    <button type="button" id="btn_stop_{{vex_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{vex_operation.id}}','btn_stop_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}')">Stop</button>
-						{% endif%}
-						{% if vex_operation.status_command %}
-							<button type="button" id="btn_status_{{vex_operation.id}}" class="btn btn-warning" data-loading-text="Getting status..." onclick="operation('status','{{vex_operation.id}}','btn_status_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}')">Status</button>
 						{% endif%}
 						{% if vex_operation.result_collect_command %}
 							<button type="button" id="btn_result_{{vex_operation.id}}" class="btn btn-info" data-loading-text="Collecting..." onclick="operation('result','{{vex_operation.id}}','btn_result_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}')">Result</button>
