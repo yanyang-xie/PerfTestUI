@@ -99,14 +99,14 @@
 		   					
 		   					if(op_tag=="start" && is_vex_operation=="true"){
 		   						$("#vex_op_status_" + data[o].id).html("Running");
-		   						${"#btn_start_" + data[o].id}.hide();
-		   						${"#btn_stop_" + data[o].id}.show();
+		   						$("#btn_start_" + data[o].id).hide();
+		   						$("#btn_stop_" + data[o].id).show();
 		   					}
 		   					
 		   					if(op_tag=="stop" && is_vex_operation=="true"){
 		   						$("#vex_op_status_" + data[o].id).html("Stopped");
-		   						${"#btn_start_" + data[o].id}.show();
-		   						${"#btn_stop_" + data[o].id}.hide();
+		   						$("#btn_start_" + data[o].id).show();
+		   						$("#btn_stop_" + data[o].id).hide();
 		   					}
             	        }
 	   				}else{
@@ -116,7 +116,6 @@
 	   					    size: 'large'
 	   					});
 	   					btn.button('reset');
-	   					btn.button()
 	   				}
                },
                error: function(){
