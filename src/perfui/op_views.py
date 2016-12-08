@@ -89,8 +89,12 @@ def vex_perf_test_status(request):
         
             if stderr is None or len(stderr) == 0:
                 status_list.append({'id':vex_op.id, 'status': 0})
+                vex_op.status_flag=True
+                vex_op.save()
             else:
                 status_list.append({'id':vex_op.id, 'status': 1})
+                vex_op.status_flag=False
+                vex_op.save()
         else:
             status_list.append({'id':vex_op.id, 'status': 2})
     
