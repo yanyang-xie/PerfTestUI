@@ -116,8 +116,8 @@ def execute_command(command, timeout=30, is_shell=True):
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=is_shell) 
     stdout, stderr = process.stdout.readlines(), process.stderr.readlines() 
     
-    import os, signal
-    os.kill(process.pid, signal.SIGKILL)
+    #import os, signal
+    #os.kill(process.pid, signal.SIGKILL)
     return stdout, stderr
 
 def execute_command_older(command, timeout=30, is_shell=True): 
