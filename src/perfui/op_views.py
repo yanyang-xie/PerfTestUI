@@ -7,8 +7,6 @@ from django.http.response import HttpResponse, HttpResponseServerError, HttpResp
 from django.shortcuts import render_to_response, get_object_or_404
 
 from perfui.models import VEXPerfTestOperation, Operation
-from cgi import log
-
 
 logger = logging.getLogger(__name__)
 
@@ -116,7 +114,11 @@ def vex_perf_test_status(request):
 def execute_command(command, timeout=30, is_shell=True):
     import subprocess
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=is_shell) 
-    return process.stdout.readlines(),process.stderr.readlines() 
+    stdout, stderr = process.stdout.readlines(), process.stderr.readlines() 
+    
+    import os, signal
+    os.kill(process.pid, signal.SIGKILL)
+    return stdout, stderr
 
 def execute_command_older(command, timeout=30, is_shell=True): 
     """call shell-command and either return its output or kill it 
