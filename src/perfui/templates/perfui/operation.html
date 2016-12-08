@@ -97,14 +97,16 @@
 		   					});
 		   					btn.button('reset');
 		   					
-		   					if(op_tag='start'){
+		   					if(op_tag=="start" && is_vex_operation=="true"){
 		   						$("#vex_op_status_" + data[o].id).html("Running");
-		   						btn.hide();
+		   						${"#btn_start_" + data[o].id}.hide();
+		   						${"#btn_stop_" + data[o].id}.show();
 		   					}
 		   					
-		   					if(op_tag='stop'){
+		   					if(op_tag=="stop" && is_vex_operation=="true"){
 		   						$("#vex_op_status_" + data[o].id).html("Stopped");
-		   						btn.hide();
+		   						${"#btn_start_" + data[o].id}.show();
+		   						${"#btn_stop_" + data[o].id}.hide();
 		   					}
             	        }
 	   				}else{
