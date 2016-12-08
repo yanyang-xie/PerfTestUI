@@ -42,6 +42,17 @@ def operation(request):
             json_data = json.dumps({"status_code": 500, "message":"Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr[-1]).replace('\n', ''))})
             logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr[-1]).replace('\n', '')))
             return HttpResponse(json_data, content_type="application/json")
+        else:
+            if vex_op == 'true':
+                if op_tag == 'start':
+                    status_flag = True
+                elif op_tag == 'stop':
+                    status_flag = False
+                
+                if status_flag is not None:
+                    obj.status_flag = status_flag
+                    obj.save()
+                    logger.debug('Save performace test operation status for %s to %s' %(obj.name, status_flag))
         
         logger.info("Operation:[id:%s, tag:%s]. Command is %s, response is '%s'" % (op_id, op_tag, command, stdout))
         # You can dump a lot of structured data into a json object, such as lists and tuples

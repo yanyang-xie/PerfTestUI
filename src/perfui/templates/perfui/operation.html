@@ -98,15 +98,15 @@
 		   					btn.button('reset');
 		   					
 		   					if(op_tag=="start" && is_vex_operation=="true"){
-		   						$("#vex_op_status_" + data[o].id).html("Running");
-		   						$("#btn_start_" + data[o].id).hide();
-		   						$("#btn_stop_" + data[o].id).show();
+		   						$("#vex_op_status_" + op_id).html("Running");
+		   						$("#btn_start_" + op_id).hide();
+		   						$("#btn_stop_" + op_id).show();
 		   					}
 		   					
 		   					if(op_tag=="stop" && is_vex_operation=="true"){
-		   						$("#vex_op_status_" + data[o].id).html("Stopped");
-		   						$("#btn_start_" + data[o].id).show();
-		   						$("#btn_stop_" + data[o].id).hide();
+		   						$("#vex_op_status_" + op_id).html("Stopped");
+		   						$("#btn_start_" + op_id).show();
+		   						$("#btn_stop_" + op_id).hide();
 		   					}
             	        }
 	   				}else{
