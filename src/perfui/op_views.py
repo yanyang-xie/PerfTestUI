@@ -42,6 +42,7 @@ def operation(request):
             return HttpResponse(json_data, content_type="application/json")
         else:
             if vex_op == 'true':
+                status_flag = None
                 if op_tag == 'start':
                     status_flag = True
                 elif op_tag == 'stop':
