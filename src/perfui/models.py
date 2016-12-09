@@ -99,28 +99,34 @@ class PerfTestConfig(models.Model):
         get_latest_by = 'project_name'
         unique_together = ("project_name", "test_type",)
 
+STATUS_TYPE = [('Shell', 'Shell'), ('Http', 'Http')]
 class BasicOperation(models.Model):
     name = models.CharField(max_length=512, blank=False, null=False)
     start_command = models.CharField(max_length=512, blank=True, null=True)
     stop_command = models.CharField(max_length=512, blank=True, null=True)
     status_command = models.CharField(max_length=512, blank=True, null=True)
     status_flag = models.BooleanField(default=False)
+    status_command_type = models.CharField(max_length=100, choices=STATUS_TYPE, blank=False, null=False, default=STATUS_TYPE[0][0])
     timeout = models.IntegerField(blank=False, null=False, default=120)
     
     class Meta:
         abstract = True
         
     def __unicode__(self):
-        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, result_collect_command:{}, status_flag:{}'\
-                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.result_collect_command, self.status_flag)
+        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, status_command_type:{}, status_flag:{}'\
+                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.status_command_type, self.status_flag)
 
 class Operation(BasicOperation):
+    deploy_command = models.CharField(max_length=512, blank=True, null=True)
+    group = models.CharField(max_length=512, blank=True, null=True)
+    
     class Meta:
         db_table = 'operation'
         
     def __unicode__(self):
-        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, status_flag:{}'\
-                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.status_flag)
+        return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, status_command_type:{}, status_flag:{}, deploy_command:{}, group:{}'\
+                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.status_command_type, self.status_flag, self.deploy_command, self.group)
+
 
 class VEXPerfTestOperation(BasicOperation):
     result_collect_command = models.CharField(max_length=512, blank=True, null=True)

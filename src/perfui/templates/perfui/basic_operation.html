@@ -1,0 +1,205 @@
+{% extends "./perfui/base.html" %}
+
+{% block header %}
+<style>
+    .table > tbody > tr > td,th,thead {
+	     vertical-align: middle;
+	     height: 50px;
+	     text-overflow: ellipsis; /* for IE */  
+	    -moz-text-overflow: ellipsis; /* for Firefox,mozilla */  
+	    overflow: hidden;   
+	    white-space: nowrap;   
+	}
+	
+	#operations {   
+	   table-layout: fixed;   
+	   width: 100% border:0px;   
+	   margin: 0px;   
+	} 
+	
+	.table > thead > tr > th{
+		vertical-align: middle;
+	}
+	
+	.mytd{
+		text-align: left 
+	}
+	
+</style>
+
+<script>
+	$(function() {
+	    $.fn.editable.defaults.mode = 'inline';
+	    $('#vex_operations a').editable({
+	    	url:'/op/update',
+	        success: function(response) {
+	        	//alert(response)
+		    },
+		    error:function(data)
+		    {
+		        //alert(response);
+		    }
+	    });
+	     
+	    setInterval("getBasicCompontentStatus()", 30000);
+	    getBasicCompontentStatus();
+	});
+	
+	function getBasicCompontentStatus() {
+        $.ajax({  
+            url: "bop/status",  
+            type: 'Get',            
+            success: function (data) {
+            	for(var o in data){
+            		//alert("#op_status_" + data[o].id)
+            		//alert("id:"+data[o].id+" status:"+data[o].status );  
+            		if (data[o].status == 0){
+            			$("#op_status_" + data[o].id).html("Running");
+            			//$("#btn_start" + data[o].id).hide();
+            			//$("#btn_stop" + data[o].id).show();
+            		}else if (data[o].status == 1){
+            			//$("#btn_stop_" + data[o].id).hide();
+            			//$("#btn_start_" + data[o].id).show();
+            			$("#op_status_" + data[o].id).html("Stopped");
+            		}else{
+            		}
+                } 
+            }  
+        });  
+    }  
+	
+	function ucfirst(str) {
+		var str = str.toLowerCase();
+		str = str.replace(/\b\w+\b/g, function(word){
+		  return word.substring(0,1).toUpperCase()+word.substring(1);
+		});
+		return str;
+	}
+	
+	function operation(op_tag, op_id, btn_id, is_vex_operation, test_type){
+		var timeout = 120000;
+		var btn = $("#" + btn_id);
+		btn.button('loading');
+		
+		$.ajax({ 
+	           type: "get", 
+               url: "/op/execute?op_tag=" + op_tag + "&op_id=" + op_id + "&vex_op=" + is_vex_operation,
+               dataType: "json",
+               timeout:timeout,
+               success: function (data) { 
+            	   if(data["status_code"] == 200){
+            		   if (op_tag == "result"){
+            			    window.location = "/result/" + test_type;
+            		   }else{
+		   					bootbox.alert({
+		   						title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Succeed</p>",
+		   						message: "<p><strong class='text-success'>" + data["message"] + "</p>",
+		   					    size: 'large'
+		   					});
+		   					btn.button('reset');
+		   					
+		   					if(op_tag=="start" && is_vex_operation=="true"){
+		   						$("#op_status_" + op_id).html("Running");
+		   						$("#btn_start_" + op_id).hide();
+		   						$("#btn_stop_" + op_id).show();
+		   					}
+		   					
+		   					if(op_tag=="stop" && is_vex_operation=="true"){
+		   						$("#op_status_" + op_id).html("Stopped");
+		   						$("#btn_start_" + op_id).show();
+		   						$("#btn_stop_" + op_id).hide();
+		   					}
+            	        }
+	   				}else{
+	   					bootbox.alert({
+	   						title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Failure</p>",
+	   						message: "<p><strong class='text-danger'>" + data["message"] + "</p>",
+	   					    size: 'large'
+	   					});
+	   					btn.button('reset');
+	   				}
+               },
+               error: function(){
+            	   bootbox.alert({
+	   					title: "<p><strong class='text-info'>" + ucfirst(op_tag) + " Failure</p>",
+	   					message: "<p><strong class='text-danger'>Operation timeout. Please check status manually.</p>",
+	   				    size: 'large'
+	   				});
+	   				btn.button('reset');
+               }
+       });
+	}
+</script>
+{% endblock%}
+
+{% block main %}
+<row class="col-sm-12 col-md-12">
+<div class="panel panel-success">
+    <div class="panel-heading">
+		<h3 class="panel-title">Benchmark Test Environment Settings</h3>
+	</div>
+	<div class="panel-body">
+		This page is to setup test environement. Typically action is to depoloy, start or stop defined components.
+	</div>
+</div>
+</row>
+
+<div>
+	{% for sub_operation_list in operation_list %}
+    {% if sub_operation_list %}
+	<div class="col-sm-6 col-md-6">
+		 <div class="caption">
+			<table id="operations" data-toggle="table" class="table table-striped table-bordered table-hover">
+				<colgroup>
+					<col style="width:40%">
+					<col style="width:20%">
+					<col style="width:40%">
+				</colgroup>
+				<thead>
+				    <tr>
+				      <th class='text-center'>Name</th>
+				      <th class='text-center'>Status</th>
+				      <th class='text-center'>Action</th>
+				     </tr>
+				</thead>
+				<tbody>
+				    {% for basic_operation in sub_operation_list %}
+				    {% if forloop.counter|divisibleby:"2" %}
+					    <tr class="success text-center">
+					{% elif forloop.counter|divisibleby:"3" %}
+					    <tr class="active text-center">
+					{% else %}
+					    <tr class="warning text-center">
+					{% endif %}
+			            <td class='text-left'>{{ basic_operation.name }}</td>
+			            <td id="op_status_{{basic_operation.id}}" >
+			                {% if basic_operation.status_command %}
+					            {% if basic_operation.status_flag %}
+					            	Running
+					            {% else %}
+					            	Stopped
+					            {% endif %}
+				            {% endif %}
+			            </td>
+			            <td class='text-left'>
+			            	{% if basic_operation.start_command %}
+			            		<button type="button" id="btn_start_op_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_op_{{basic_operation.id}}', 'false','')">Start</button>
+							{% endif %}
+							{% if basic_operation.stop_command %}
+								<button type="button" id="btn_stop_op_{{basic_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_op_{{basic_operation.id}}', 'false','')">Stop</button>
+							{% endif%}
+							{% if basic_operation.deploy_command %}
+								<button type="button" id="btn_deploy_op_{{basic_operation.id}}" class="btn btn-info" data-loading-text="Deploying status..." onclick="operation('deploy','{{basic_operation.id}}','btn_deploy_op_{{basic_operation.id}}', 'false','')">Deploy</button>
+							{% endif%}
+			            </td>
+			            
+			        </tr>
+			        {% endfor %}
+				 </tbody>
+			</table>
+		</div>
+	</div>
+	{% endif %}
+	{% endfor %}
+</div>
+{% endblock%}

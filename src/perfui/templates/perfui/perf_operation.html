@@ -41,7 +41,8 @@
 		    }
 	    });
 	     
-	    setInterval("getVEXPerfTestStatus()", 120000);  
+	    setInterval("getVEXPerfTestStatus()", 120000);
+	    getVEXPerfTestStatus()
 	});
 	
 	function getVEXPerfTestStatus() {
@@ -53,13 +54,13 @@
             	for(var o in data){
             		//alert("id:"+data[o].id+" status:"+data[o].status );  
             		if (data[o].status == 0){
-            			$("#vex_op_status_" + data[o].id).html("Running");
+            			$("#op_status_" + data[o].id).html("Running");
             			$("#btn_start" + data[o].id).hide();
             			$("#btn_stop" + data[o].id).show();
             		}else if (data[o].status == 1){
             			$("#btn_stop_" + data[o].id).hide();
             			$("#btn_start_" + data[o].id).show();
-            			$("#vex_op_status_" + data[o].id).html("Stopped");
+            			$("#op_status_" + data[o].id).html("Stopped");
             		}else{
             		}
                 } 
@@ -98,13 +99,13 @@
 		   					btn.button('reset');
 		   					
 		   					if(op_tag=="start" && is_vex_operation=="true"){
-		   						$("#vex_op_status_" + op_id).html("Running");
+		   						$("#op_status_" + op_id).html("Running");
 		   						$("#btn_start_" + op_id).hide();
 		   						$("#btn_stop_" + op_id).show();
 		   					}
 		   					
 		   					if(op_tag=="stop" && is_vex_operation=="true"){
-		   						$("#vex_op_status_" + op_id).html("Stopped");
+		   						$("#op_status_" + op_id).html("Stopped");
 		   						$("#btn_start_" + op_id).show();
 		   						$("#btn_stop_" + op_id).hide();
 		   					}
@@ -156,7 +157,7 @@
 			      <th class='text-center'>Session No.</th>
 			      <th class='text-center'>Warm Up</th>
 			      <th class='text-center'>Status</th>
-			      <th class='text-center'>Operation</th>
+			      <th class='text-center'>Action</th>
 			     </tr>
 			</thead>
 			<tbody>
@@ -181,7 +182,7 @@
 		            	{% endifequal %}
 		            </td>
 		            <td><a href="#" id="warm_up_minute" name="warm_up_minute" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.warm_up_minute }}</a> Minutes</td>
-		            <td id="vex_op_status_{{vex_operation.id}}" >
+		            <td id="op_status_{{vex_operation.id}}" >
 			            {% if vex_operation.status_flag %}
 			            	Running
 			            {% else %}
@@ -196,7 +197,7 @@
 						    <button type="button" id="btn_stop_{{vex_operation.id}}" class="btn btn-primary" {% if not vex_operation.status_flag %}style="display: none;"{%endif%} data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{vex_operation.id}}','btn_stop_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}')"><span class="glyphicon glyphicon-stop"></span> Stop</button>
 						{% endif%}
 						{% if vex_operation.result_collect_command %}
-							<button type="button" id="btn_result_{{vex_operation.id}}" class="btn btn-warning" data-loading-text="Collecting..." onclick="operation('result','{{vex_operation.id}}','btn_result_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}')"><span class="glyphicon glyphicon-save"></span> Result</button>
+							<button type="button" id="btn_result_{{vex_operation.id}}" class="btn btn-info" data-loading-text="Collecting..." onclick="operation('result','{{vex_operation.id}}','btn_result_{{vex_operation.id}}', 'true', '{{vex_operation.perf_config.test_type}}')"><span class="glyphicon glyphicon-save"></span> Result</button>
 						{% endif%}
 		            </td>
 		        </tr>
@@ -223,7 +224,7 @@
 				<thead>
 				    <tr>
 				      <th class='text-center'>Name</th>
-				      <th class='text-center'>Operation</th>
+				      <th class='text-center'>Action</th>
 				     </tr>
 				</thead>
 				<tbody>
@@ -248,7 +249,7 @@
 								<button type="button" id="btn_stop_op_{{basic_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_op_{{basic_operation.id}}', 'false','')">Stop</button>
 							{% endif%}
 							{% if basic_operation.status_command %}
-								<button type="button" id="btn_status_op_{{basic_operation.id}}" class="btn btn-warning" data-loading-text="Getting status..." onclick="operation('status','{{basic_operation.id}}','btn_status_op_{{basic_operation.id}}', 'false','')">Status</button>
+								<button type="button" id="btn_status_op_{{basic_operation.id}}" class="btn btn-info" data-loading-text="Getting status..." onclick="operation('status','{{basic_operation.id}}','btn_status_op_{{basic_operation.id}}', 'false','')">Status</button>
 							{% endif%}
 			            </td>
 			        </tr>

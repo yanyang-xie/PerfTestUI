@@ -5,12 +5,13 @@ import logging
 
 from django.http.response import HttpResponse, HttpResponseServerError, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404
+import requests
 
-from perfui.models import VEXPerfTestOperation, Operation
+from perfui.models import VEXPerfTestOperation, Operation, STATUS_TYPE
 
 logger = logging.getLogger(__name__)
 
-def index(request):
+def perf_op_index(request):
     vex_operation_list = VEXPerfTestOperation.objects.filter(perf_config__isnull=False)
     operation_list = Operation.objects.all()
     
@@ -19,7 +20,18 @@ def index(request):
     operation_list_2 = operation_list[1::2]
     
     context = {'vex_operation_list': vex_operation_list, 'operation_list':[operation_list_1, operation_list_2]}
-    return render_to_response('perfui/operation.html', context)
+    return render_to_response('perfui/perf_operation.html', context)
+
+def basic_op_index(request):
+    operation_list = Operation.objects.all()
+    
+    # operation list will be separated to 2 tables
+    operation_list_1 = operation_list[::2]
+    operation_list_2 = operation_list[1::2]
+    
+    context = {'operation_list':[operation_list_1, operation_list_2]}
+    print context
+    return render_to_response('perfui/basic_operation.html', context)
 
 def operation(request):
     try:
@@ -33,12 +45,15 @@ def operation(request):
         if command == "":
             raise Exception("Not found command['%s']" %(op_tag))
         
-        stdout, stderr = execute_command(command, obj.timeout)
-        
+        stdout, stderr, ex = _execute_command(command, obj.timeout, True)
         if stderr is not None and len(stderr) > 0:
             logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr)))
             json_data = json.dumps({"status_code": 500, "message":"Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr[-1]).replace('\n', ''))})
             logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr[-1]).replace('\n', '')))
+            return HttpResponse(json_data, content_type="application/json")
+        elif ex is not None:
+            logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(ex)))
+            json_data = json.dumps({"status_code": 500, "message":"Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(ex).replace('\n', ''))})
             return HttpResponse(json_data, content_type="application/json")
         else:
             if vex_op == 'true':
@@ -88,54 +103,64 @@ def update_operation_config(request):
         response = HttpResponseServerError('Server ERROR')
         return response
 
+def basic_compontent_status(request):
+    return _check_status(request, False)
+
 def vex_perf_test_status(request):
+    return _check_status(request, True)
+
+def _check_status(request, is_vex):
     status_list = []
     
-    vex_operation_list = VEXPerfTestOperation.objects.all()
-    for vex_op in vex_operation_list:
-        status_command = vex_op.status_command
-        if status_command is not None:
-            stdout, stderr = execute_command(status_command)
-        
-            if stderr is None or len(stderr) == 0:
-                status_list.append({'id':vex_op.id, 'status': 0})
-                vex_op.status_flag=True
-                vex_op.save()
+    operation_list = VEXPerfTestOperation.objects.all() if is_vex is True else Operation.objects.all()
+    for op in operation_list:
+        status_command = op.status_command
+        if status_command is not None and status_command.strip() != '':
+            stdout, stderr, ex = None, None,None
+            if op.status_command_type == STATUS_TYPE[0][0]:
+                stdout, stderr, ex = _execute_command(status_command, op.timeout, True)
             else:
-                status_list.append({'id':vex_op.id, 'status': 1})
-                vex_op.status_flag=False
-                vex_op.save()
+                stdout, stderr, ex = _execute_command(status_command, op.timeout, False)
+            
+            #0-running, 1-stopped, 2, exception
+            if ex is not None:
+                status_list.append({'id':op.id, 'name':op.name, 'status': 2})
+            elif stderr is None or len(stderr) == 0:
+                status_list.append({'id':op.id, 'name':op.name, 'status': 0})
+                op.status_flag=True
+                op.save()
+            else:
+                status_list.append({'id':op.id, 'name':op.name, 'status': 1})
+                op.status_flag=False
+                op.save()
         else:
-            status_list.append({'id':vex_op.id, 'status': 2})
+            status_list.append({'id':op.id, 'name':op.name, 'status': 2})
     
     json_data = json.dumps(status_list)
     logger.debug('VEX operation status: %s' %(json_data))
     return HttpResponse(json_data, content_type="application/json")
 
-def execute_command(command, timeout=30, is_shell=True):
-    import subprocess
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=is_shell) 
-    stdout, stderr = process.stdout.readlines(), process.stderr.readlines() 
-    
-    #import os, signal
-    #os.kill(process.pid, signal.SIGKILL)
-    return stdout, stderr
-
-def execute_command_older(command, timeout=30, is_shell=True): 
-    """call shell-command and either return its output or kill it 
-    if it doesn't normally exit within timeout seconds and return None""" 
-    import subprocess, datetime, os, time, signal  
-    start = datetime.datetime.now()
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=is_shell) 
-    while process.poll() is None:
-        time.sleep(.5)
-        now = datetime.datetime.now()
-        if (now - start).seconds> timeout:
-            logger.warn("Timeout[%s] to run [%s], return" %(timeout, command))
-            os.kill(process.pid, signal.SIGKILL)
-            os.waitpid(-1, os.WNOHANG)
-            return None,["Timeout[%s]" %(timeout), ]
-    return process.stdout.readlines(),process.stderr.readlines()
+def _execute_command(cmd, timeout=30, is_shell=True):
+    try:
+        if is_shell is True:
+            import subprocess
+            process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=is_shell) 
+            stdout, stderr = process.stdout.readlines(), process.stderr.readlines() 
+            
+            #import os, signal
+            #os.kill(process.pid, signal.SIGKILL)
+            return stdout, stderr, None
+        else:
+            #do_http
+            r = requests.get(cmd, timeout=timeout)
+            if r.status_code != 200 and r.status_code != 204:
+                logger.debug('Service is not running. Cmd is %s, response status code is %s' %(cmd, r.status_code))
+                return None, 'Service is not running', None
+            else:
+                return r.text, None, None
+    except Exception, e:
+        logger.error('Execute command error. Cmd is %s. Error is %s' %(cmd, e))
+        return None, None, e
 
 def _get_operation_command(op_id, op_tag, is_vex_operation):
     if is_vex_operation == 'true':
@@ -152,4 +177,6 @@ def _get_operation_command(op_id, op_tag, is_vex_operation):
         command = obj.status_command
     elif op_tag == "result":
         command = obj.result_collect_command
+    elif op_tag == "deploy":
+        command = obj.deploy_command
     return command, obj
