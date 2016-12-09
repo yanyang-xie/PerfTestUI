@@ -61,6 +61,10 @@ function operation(op_tag, op_id, btn_id, is_vex_operation, test_type){
 	   						$("#btn_start_" + op_id).show();
 	   						$("#btn_stop_" + op_id).hide();
 	   					}
+	   					
+	   					if(op_tag=="deploy"){
+	   						getBasicCompontentStatus();
+	   					}
         	        }
    				}else{
    					bootbox.alert({
