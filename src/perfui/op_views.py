@@ -6,8 +6,10 @@ import logging
 from django.http.response import HttpResponse, HttpResponseServerError, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404
 import requests
+from requests.exceptions import ConnectionError
 
 from perfui.models import VEXPerfTestOperation, Operation, STATUS_TYPE
+
 
 logger = logging.getLogger(__name__)
 
@@ -125,7 +127,10 @@ def _check_status(request, is_vex):
             
             #0-running, 1-stopped, 2, exception
             if ex is not None:
-                status_list.append({'id':op.id, 'name':op.name, 'status': 2})
+                if isinstance(ex, ConnectionError):
+                    status_list.append({'id':op.id, 'name':op.name, 'status': 1})
+                else:
+                    status_list.append({'id':op.id, 'name':op.name, 'status': 2})
             elif stderr is None or len(stderr) == 0:
                 status_list.append({'id':op.id, 'name':op.name, 'status': 0})
                 op.status_flag=True
