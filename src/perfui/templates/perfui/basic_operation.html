@@ -41,25 +41,23 @@
 		    }
 	    });
 	     
-	    setInterval("getBasicCompontentStatus()", 30000);
+	    setInterval("getStatus('bop/status')", 30000);
 	    getBasicCompontentStatus();
 	});
 	
-	function getBasicCompontentStatus() {
+	function getStatus(url) {
         $.ajax({  
-            url: "bop/status",  
+            url: url,  
             type: 'Get',            
             success: function (data) {
             	for(var o in data){
-            		//alert("#op_status_" + data[o].id)
-            		//alert("id:"+data[o].id+" status:"+data[o].status );  
             		if (data[o].status == 0){
             			$("#op_status_" + data[o].id).html("Running");
-            			//$("#btn_start" + data[o].id).hide();
-            			//$("#btn_stop" + data[o].id).show();
+            			$("#btn_start_" + data[o].id).hide();
+            			$("#btn_stop_" + data[o].id).show();
             		}else if (data[o].status == 1){
-            			//$("#btn_stop_" + data[o].id).hide();
-            			//$("#btn_start_" + data[o].id).show();
+            			$("#btn_stop_" + data[o].id).hide();
+            			$("#btn_start_" + data[o].id).show();
             			$("#op_status_" + data[o].id).html("Stopped");
             		}else{
             		}
@@ -183,13 +181,13 @@
 			            </td>
 			            <td class='text-left'>
 			            	{% if basic_operation.start_command %}
-			            		<button type="button" id="btn_start_op_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_op_{{basic_operation.id}}', 'false','')">Start</button>
+			            		<button type="button" id="btn_start_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_{{basic_operation.id}}', 'false','')">Start</button>
 							{% endif %}
 							{% if basic_operation.stop_command %}
-								<button type="button" id="btn_stop_op_{{basic_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_op_{{basic_operation.id}}', 'false','')">Stop</button>
+								<button type="button" id="btn_stop_{{basic_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_{{basic_operation.id}}', 'false','')">Stop</button>
 							{% endif%}
 							{% if basic_operation.deploy_command %}
-								<button type="button" id="btn_deploy_op_{{basic_operation.id}}" class="btn btn-info" data-loading-text="Deploying status..." onclick="operation('deploy','{{basic_operation.id}}','btn_deploy_op_{{basic_operation.id}}', 'false','')">Deploy</button>
+								<button type="button" id="btn_deploy_{{basic_operation.id}}" class="btn btn-info" data-loading-text="Deploying..." onclick="operation('deploy','{{basic_operation.id}}','btn_deploy_{{basic_operation.id}}', 'false','')">Deploy</button>
 							{% endif%}
 			            </td>
 			            

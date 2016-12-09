@@ -41,22 +41,21 @@
 		    }
 	    });
 	     
-	    setInterval("getVEXPerfTestStatus()", 120000);
+	    setInterval("getStatus('/op/perfstatus')", 120000);
 	    getVEXPerfTestStatus()
 	});
 	
-	function getVEXPerfTestStatus() {
-		//$("#vex_op_status_1").html("456456");
+	function getStatus() {
         $.ajax({  
-            url: "/op/perfstatus",  
+            url: url,  
             type: 'Get',            
             success: function (data) {  
             	for(var o in data){
             		//alert("id:"+data[o].id+" status:"+data[o].status );  
             		if (data[o].status == 0){
             			$("#op_status_" + data[o].id).html("Running");
-            			$("#btn_start" + data[o].id).hide();
-            			$("#btn_stop" + data[o].id).show();
+            			$("#btn_start_" + data[o].id).hide();
+            			$("#btn_stop_" + data[o].id).show();
             		}else if (data[o].status == 1){
             			$("#btn_stop_" + data[o].id).hide();
             			$("#btn_start_" + data[o].id).show();
