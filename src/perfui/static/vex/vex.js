@@ -50,13 +50,13 @@ function operation(op_tag, op_id, btn_id, is_vex_operation, test_type){
 	   					});
 	   					btn.button('reset');
 	   					
-	   					if(op_tag=="start" && is_vex_operation=="true"){
+	   					if(op_tag=="start"){
 	   						$("#op_status_" + op_id).html("Running");
 	   						$("#btn_start_" + op_id).hide();
 	   						$("#btn_stop_" + op_id).show();
 	   					}
 	   					
-	   					if(op_tag=="stop" && is_vex_operation=="true"){
+	   					if(op_tag=="stop"){
 	   						$("#op_status_" + op_id).html("Stopped");
 	   						$("#btn_start_" + op_id).show();
 	   						$("#btn_stop_" + op_id).hide();
