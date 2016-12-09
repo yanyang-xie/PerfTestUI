@@ -20,6 +20,7 @@ def perf_op_index(request):
     operation_list_2 = operation_list[1::2]
     
     context = {'vex_operation_list': vex_operation_list, 'operation_list':[operation_list_1, operation_list_2]}
+    logger.debug('perf_op_index context: %s' %(context))
     return render_to_response('perfui/perf_operation.html', context)
 
 def basic_op_index(request):
@@ -30,7 +31,7 @@ def basic_op_index(request):
     operation_list_2 = operation_list[1::2]
     
     context = {'operation_list':[operation_list_1, operation_list_2]}
-    print context
+    logger.debug('basic_op_index context: %s' %(context))
     return render_to_response('perfui/basic_operation.html', context)
 
 def operation(request):
@@ -137,7 +138,7 @@ def _check_status(request, is_vex):
             status_list.append({'id':op.id, 'name':op.name, 'status': 2})
     
     json_data = json.dumps(status_list)
-    logger.debug('VEX operation status: %s' %(json_data))
+    logger.info('VEX operation status: %s' %(json_data))
     return HttpResponse(json_data, content_type="application/json")
 
 def _execute_command(cmd, timeout=30, is_shell=True):

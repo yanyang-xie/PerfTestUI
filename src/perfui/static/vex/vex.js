@@ -1,4 +1,4 @@
-function getStatus() {
+function getStatus(url) {
     $.ajax({  
         url: url,  
         type: 'Get',            
