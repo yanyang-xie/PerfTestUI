@@ -103,10 +103,10 @@
 			            </td>
 			            <td class='text-left'>
 			            	{% if basic_operation.start_command %}
-			            		<button type="button" id="btn_start_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_{{basic_operation.id}}', 'false','')">Start</button>
+			            		<button type="button" id="btn_start_{{basic_operation.id}}" class="btn btn-success" {% if vex_operation.status_flag %}style="display: none;"{%endif%} data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_{{basic_operation.id}}', 'false','')">Start</button>
 							{% endif %}
 							{% if basic_operation.stop_command %}
-								<button type="button" id="btn_stop_{{basic_operation.id}}" class="btn btn-primary" data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_{{basic_operation.id}}', 'false','')">Stop</button>
+								<button type="button" id="btn_stop_{{basic_operation.id}}" class="btn btn-primary" {% if not vex_operation.status_flag %}style="display: none;"{%endif%} data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_{{basic_operation.id}}', 'false','')">Stop</button>
 							{% endif%}
 							{% if basic_operation.deploy_command %}
 								<button type="button" id="btn_deploy_{{basic_operation.id}}" class="btn btn-info" data-loading-text="Deploying..." onclick="operation('deploy','{{basic_operation.id}}','btn_deploy_{{basic_operation.id}}', 'false','')">Deploy</button>
