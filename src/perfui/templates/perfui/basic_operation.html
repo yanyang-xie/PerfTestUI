@@ -41,7 +41,7 @@
 		    }
 	    });
 	     
-	    setInterval("getBasicCompontentStatus()", 30000);
+	    setInterval("getBasicCompontentStatus()", 5000);
 	    getBasicCompontentStatus();
 	});
 	
@@ -102,12 +102,22 @@
 				            {% endif %}
 			            </td>
 			            <td class='text-left'>
-			            	{% if basic_operation.start_command %}
-			            		<button type="button" id="btn_start_{{basic_operation.id}}" class="btn btn-success" {% if vex_operation.status_flag %}style="display: none;"{%endif%} data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_{{basic_operation.id}}', 'false','', {% if basic_operation.status_command  %}true{%else%}false{%endif%})">Start</button>
-							{% endif %}
-							{% if basic_operation.stop_command %}
-								<button type="button" id="btn_stop_{{basic_operation.id}}" class="btn btn-primary" {% if not vex_operation.status_flag %}style="display: none;"{%endif%} data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_{{basic_operation.id}}', 'false','', {% if basic_operation.status_command  %}true{%else%}false{%endif%})">Stop</button>
-							{% endif%}
+			                {% if basic_operation.status_command  %}
+			                    {% if basic_operation.start_command %}
+				            		<button type="button" id="btn_start_{{basic_operation.id}}" class="btn btn-success" {% if vex_operation.status_flag %}style="display: none;"{%endif%} data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_{{basic_operation.id}}', 'false','', 'true')">Start</button>
+								{% endif %}
+								{% if basic_operation.stop_command %}
+									<button type="button" id="btn_stop_{{basic_operation.id}}" class="btn btn-primary" {% if not vex_operation.status_flag %}style="display: none;"{%endif%} data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_{{basic_operation.id}}', 'false','', 'true')">Stop</button>
+								{% endif%}
+			                {% else %}
+			                    {% if basic_operation.start_command %}
+				            		<button type="button" id="btn_start_{{basic_operation.id}}" class="btn btn-success" data-loading-text="Starting..." autocomplete="off" onclick="operation('start','{{basic_operation.id}}','btn_start_{{basic_operation.id}}', 'false','', 'false')">Start</button>
+								{% endif %}
+								{% if basic_operation.stop_command %}
+									<button type="button" id="btn_stop_{{basic_operation.id}}" class="btn btn-primary"  data-loading-text="Stoping..." autocomplete="off" onclick="operation('stop','{{basic_operation.id}}','btn_stop_{{basic_operation.id}}', 'false','', 'false')">Stop</button>
+								{% endif%}
+			                {% endif %}
+			            
 							{% if basic_operation.deploy_command %}
 								<button type="button" id="btn_deploy_{{basic_operation.id}}" class="btn btn-info" data-loading-text="Deploying..." onclick="operation('deploy','{{basic_operation.id}}','btn_deploy_{{basic_operation.id}}', 'false','')">Deploy</button>
 							{% endif%}
