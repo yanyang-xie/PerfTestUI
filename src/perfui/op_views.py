@@ -15,24 +15,27 @@ logger = logging.getLogger(__name__)
 
 def perf_op_index(request):
     vex_operation_list = VEXPerfTestOperation.objects.filter(perf_config__isnull=False)
-    operation_list = Operation.objects.all()
     
-    # operation list will be separated to 2 tables
-    operation_list_1 = operation_list[::2]
-    operation_list_2 = operation_list[1::2]
-    
-    context = {'vex_operation_list': vex_operation_list, 'operation_list':[operation_list_1, operation_list_2]}
+    context = {'vex_operation_list': vex_operation_list,}
     logger.debug('perf_op_index context: %s' %(context))
     return render_to_response('perfui/perf_operation.html', context)
 
 def basic_op_index(request):
-    operation_list = Operation.objects.all()
+    groups = set(Operation.objects.values_list('group'))
+    print groups
+    operation_list = []
+    for group in groups:
+        operation_list.append(Operation.objects.filter(group=group[0]))
+    context = {'operation_list': operation_list}
     
+    '''
+    operation_list = Operation.objects.all()
     # operation list will be separated to 2 tables
     operation_list_1 = operation_list[::2]
     operation_list_2 = operation_list[1::2]
     
     context = {'operation_list':[operation_list_1, operation_list_2]}
+    '''
     logger.debug('basic_op_index context: %s' %(context))
     return render_to_response('perfui/basic_operation.html', context)
 
