@@ -82,7 +82,7 @@
 				      <th class='text-center'>Action</th>
 				     </tr>
 				</thead>
-				<tbody class="text-info">
+				<tbody>
 				    {% for basic_operation in sub_operation_list %}
 				    {% if forloop.counter|divisibleby:"2" %}
 					    <tr class="success text-center">
@@ -94,7 +94,7 @@
 			            <td class='text-left'>
 			                {{ basic_operation.name }}
 			            	{% if basic_operation.short_description %}
-			                	<em><small class="pull-right">{{basic_operation.short_description}}</small></em>
+			                	<em><small class="pull-right text-info">{{basic_operation.short_description}}</small></em>
 			                {% endif %}
 			            </td>
 			            <td id="op_status_{{basic_operation.id}}" >
