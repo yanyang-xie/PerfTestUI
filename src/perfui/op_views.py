@@ -8,7 +8,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 import requests
 from requests.exceptions import ConnectionError, Timeout
 
-from perfui.models import VEXPerfTestOperation, Operation, STATUS_TYPE
+from perfui.models import VEXPerfTestOperation, Operation, STATUS_TYPE,\
+    OperationGroup
 
 
 logger = logging.getLogger(__name__)
@@ -21,12 +22,13 @@ def perf_op_index(request):
     return render_to_response('perfui/perf_operation.html', context)
 
 def basic_op_index(request):
-    groups = set(Operation.objects.values_list('group'))
-    print groups
+    groups = OperationGroup.objects.values_list('id')
+    
     operation_list = []
     for group in groups:
-        
-        operation_list.append(Operation.objects.filter(group=group[0]))
+        ops = Operation.objects.filter(group__id=group[0])
+        if ops.count() > 0:
+            operation_list.append(ops)
     context = {'operation_list': operation_list}
     
     '''

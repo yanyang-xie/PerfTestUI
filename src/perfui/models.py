@@ -2,6 +2,8 @@
 from django.db import models
 from perfui.utility.date_util import get_current_day_start_date
 from Crypto.Random.random import choice
+from wheel.metadata import unique
+from pymongo.read_preferences import Primary
 
 # choices = ['value', 'display name']
 CHOICES_PROJECT = [('VEX-Core', 'VEX-Core'), ('VEX-Frontend', 'VEX-Frontend')]
@@ -101,7 +103,15 @@ class PerfTestConfig(models.Model):
         unique_together = ("project_name", "test_type",)
 
 STATUS_TYPE = [('Shell', 'Shell'), ('Http', 'Http')]
-GROUP_LIST = [('VEX Component','VEX Component'), ('VEX Simulator','VEX Simulator'), ('Common', 'Common'), ]
+class OperationGroup(models.Model):
+    name = models.CharField(max_length=60, blank=False, null=False, unique=True)
+    
+    class Meta:
+        db_table = 'operation_group'
+    
+    def __unicode__(self):
+        return 'id:{}, name:{}'.format(self.id, self.name)
+
 class BasicOperation(models.Model):
     name = models.CharField(max_length=512, blank=False, null=False)
     start_command = models.CharField(max_length=512, blank=True, null=True)
@@ -120,14 +130,14 @@ class BasicOperation(models.Model):
 
 class Operation(BasicOperation):
     deploy_command = models.CharField(max_length=512, blank=True, null=True)
-    group = models.CharField(choices=GROUP_LIST, max_length=512, blank=False, null=False, default=GROUP_LIST[0][0])
+    group = models.ForeignKey(OperationGroup)
     
     class Meta:
         db_table = 'operation'
         
     def __unicode__(self):
         return 'id:{}, name:{}, start_command:{}, stop_command:{}, status_command:{}, status_command_type:{}, status_flag:{}, deploy_command:{}, group:{}'\
-                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.status_command_type, self.status_flag, self.deploy_command, self.group)
+                    .format(self.id, self.name, self.start_command, self.stop_command, self.status_command, self.status_command_type, self.status_flag, self.deploy_command, self.group.name)
 
 
 class VEXPerfTestOperation(BasicOperation):
