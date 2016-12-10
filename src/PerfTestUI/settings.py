@@ -28,9 +28,9 @@ TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = [ '*', '127.0.0.1']
 
+DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
 
 # Application definition
-
 INSTALLED_APPS = (
     'django_admin_bootstrapped',
     'django.contrib.admin',
