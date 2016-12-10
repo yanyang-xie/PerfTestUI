@@ -71,18 +71,18 @@
 		 <div class="caption">
 			<table id="operations" data-toggle="table" class="table table-striped table-bordered table-hover">
 				<colgroup>
-					<col style="width:40%">
-					<col style="width:20%">
+					<col style="width:45%">
+					<col style="width:15%">
 					<col style="width:40%">
 				</colgroup>
-				<thead>
+				<thead >
 				    <tr>
 				      <th class='text-center'>Component</th>
 				      <th class='text-center'>Status</th>
 				      <th class='text-center'>Action</th>
 				     </tr>
 				</thead>
-				<tbody>
+				<tbody class="text-info">
 				    {% for basic_operation in sub_operation_list %}
 				    {% if forloop.counter|divisibleby:"2" %}
 					    <tr class="success text-center">
@@ -91,7 +91,12 @@
 					{% else %}
 					    <tr class="warning text-center">
 					{% endif %}
-			            <td class='text-left'>{{ basic_operation.name }}</td>
+			            <td class='text-left'>
+			                {{ basic_operation.name }}
+			            	{% if basic_operation.short_description %}
+			                	<em><small class="pull-right">{{basic_operation.short_description}}</small></em>
+			                {% endif %}
+			            </td>
 			            <td id="op_status_{{basic_operation.id}}" >
 			                {% if basic_operation.status_command %}
 					            {% if basic_operation.status_flag %}

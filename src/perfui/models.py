@@ -118,6 +118,8 @@ class BasicOperation(models.Model):
     status_flag = models.BooleanField(default=False)
     status_command_type = models.CharField(max_length=100, choices=STATUS_TYPE, blank=False, null=False, default=STATUS_TYPE[-1][0])
     timeout = models.IntegerField(blank=False, null=False, default=120)
+    short_description = models.CharField(max_length=64, blank=True, null=True)
+    description = models.CharField(max_length=1024, blank=True, null=True)
     
     class Meta:
         abstract = True

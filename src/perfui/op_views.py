@@ -118,10 +118,10 @@ def basic_compontent_status(request):
 def vex_perf_test_status(request):
     return _check_status(request, True)
 
-def _check_status(request, is_vex):
+def _check_status(request, is_vex_op):
     status_list = []
     
-    operation_list = VEXPerfTestOperation.objects.all() if is_vex is True else Operation.objects.all()
+    operation_list = VEXPerfTestOperation.objects.all() if is_vex_op is True else Operation.objects.all()
     for op in operation_list:
         status_command = op.status_command
         if status_command is not None and status_command.strip() != '':
@@ -130,6 +130,13 @@ def _check_status(request, is_vex):
                 stdout, stderr, ex = _execute_command(status_command, op.timeout, True)
             else:
                 stdout, stderr, ex = _execute_command(status_command, op.timeout, False)
+                try:
+                    # to vex component, save version into short description
+                    data = json.loads(stdout)
+                    version = data['buildStatus']['projectVersion'].lower()
+                    op.short_description = version
+                except:
+                    pass
             
             #0-running, 1-stopped, 2, exception
             if ex is not None:
