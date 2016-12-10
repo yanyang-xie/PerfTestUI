@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 from django.db import models
 from perfui.utility.date_util import get_current_day_start_date
+from Crypto.Random.random import choice
 
 # choices = ['value', 'display name']
 CHOICES_PROJECT = [('VEX-Core', 'VEX-Core'), ('VEX-Frontend', 'VEX-Frontend')]
@@ -100,13 +101,14 @@ class PerfTestConfig(models.Model):
         unique_together = ("project_name", "test_type",)
 
 STATUS_TYPE = [('Shell', 'Shell'), ('Http', 'Http')]
+GROUP_LIST = [('VEX Component','VEX Component'), ('VEX Simulator','VEX Simulator'), ('Common', 'Common'), ]
 class BasicOperation(models.Model):
     name = models.CharField(max_length=512, blank=False, null=False)
     start_command = models.CharField(max_length=512, blank=True, null=True)
     stop_command = models.CharField(max_length=512, blank=True, null=True)
     status_command = models.CharField(max_length=512, blank=True, null=True)
     status_flag = models.BooleanField(default=False)
-    status_command_type = models.CharField(max_length=100, choices=STATUS_TYPE, blank=False, null=False, default=STATUS_TYPE[0][0])
+    status_command_type = models.CharField(max_length=100, choices=STATUS_TYPE, blank=False, null=False, default=STATUS_TYPE[-1][0])
     timeout = models.IntegerField(blank=False, null=False, default=120)
     
     class Meta:
@@ -118,7 +120,7 @@ class BasicOperation(models.Model):
 
 class Operation(BasicOperation):
     deploy_command = models.CharField(max_length=512, blank=True, null=True)
-    group = models.CharField(max_length=512, blank=True, null=True)
+    group = models.CharField(choices=GROUP_LIST, max_length=512, blank=False, null=False, default=GROUP_LIST[0][0])
     
     class Meta:
         db_table = 'operation'

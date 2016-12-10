@@ -25,6 +25,7 @@ def basic_op_index(request):
     print groups
     operation_list = []
     for group in groups:
+        
         operation_list.append(Operation.objects.filter(group=group[0]))
     context = {'operation_list': operation_list}
     
