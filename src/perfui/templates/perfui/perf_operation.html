@@ -8,8 +8,11 @@
 	     text-overflow: ellipsis; /* for IE */  
 	    -moz-text-overflow: ellipsis; /* for Firefox,mozilla */  
 	    overflow: hidden;   
-	    white-space: nowrap;   
+	    white-space: nowrap;
 	}
+	
+    .table {width: 100%; table-layout: fixed;}
+    .td {word-break: break-all; word-wrap:break-word;}
 	
 	#operations {   
 	   table-layout: fixed;   
@@ -62,6 +65,17 @@
 		<div class="panel-body">
 			<p class="text-success">This page is to start or stop VEX benchmark test, then collect benchmark test result in time.</p>
 		</div>
+		<table class="table table-condensed text-info table-striped" style="word-break:break-all; word-wrap:break-all;">
+			<tr>
+			    <td class="text-center" style="width:8%">VOD</td>
+			    <td style="word-break:break-all; word-wrap:break-all;"><em>Client call VEX only once for master manifest and entertainment manifest, so the benchmark key is concurrent request number per second</em>
+			    </td>
+			</tr>
+			<tr>
+			     <td class="text-center" style="width:8%">Linear</td>
+			    <td style="word-break:break-all; word-wrap:break-all;"><em>Client call VEX for one master manifest first, then call for entertainment manifest every 2 seconds, so the benchmark key is total client from benchmark starting</em></td>
+			</tr>
+		</table>
     </div>
 </row>
 
@@ -106,9 +120,9 @@
 		            <td><a href="#" id="bitrate_number" name="bitrate_number" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.bitrate_number }}</a></td>
 		            <td><a href="#" id="session_number" name="session_number" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.session_number }} </a>
 		            	{% ifequal vex_operation.perf_config.test_type 'VOD_T6'%}
-		            		/Second
+		            		<span class="add-on">/Second</span> 
 		            	{% else %}
-		            		Session
+		            		<span class="add-on">Session</span>
 		            	{% endifequal %}
 		            </td>
 		            <td><a href="#" id="warm_up_minute" name="warm_up_minute" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.warm_up_minute }}</a> Minutes</td>
