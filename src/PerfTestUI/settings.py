@@ -144,7 +144,7 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
-        '': {
+        'PerfTestUI': {
             'handlers': ['logfile', 'console'],
             'level': 'INFO',
             'propagate': True,
