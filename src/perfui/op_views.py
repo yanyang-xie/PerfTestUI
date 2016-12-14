@@ -133,7 +133,7 @@ def _check_status(request, is_vex_op):
                 try:
                     # to vex component, save version into short description
                     data = json.loads(stdout)
-                    version = data['buildStatus']['projectVersion'].lower()
+                    version = data['AppVersion'].lower()
                     op.short_description = version
                 except:
                     pass
