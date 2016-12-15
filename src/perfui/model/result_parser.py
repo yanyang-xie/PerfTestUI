@@ -11,11 +11,11 @@ class VEXPerfTestResult():
         self.response_time_distribution_tag = 'millisecond'
         
         self.test_duration = 1
-        self.request_total = 1
+        self.request_total = 0
         self.request_concurrent = 1
         self.request_succeed_rate = '100.00%'
         self.response_average_time = 1
-        self.response_failure = 1
+        self.response_failure = 0
         self.response_time_distribution_list = []
         
         self.parse()
