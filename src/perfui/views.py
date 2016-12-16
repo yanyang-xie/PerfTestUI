@@ -3,6 +3,7 @@
 
 import logging
 
+from django.db.models.query_utils import Q
 from django.shortcuts import render_to_response, render
 
 from perfui.model.armchart import generate_vex_am_serial_chart_info
@@ -11,6 +12,7 @@ from perfui.models import PerfTestResult, get_test_type_json_list, \
     get_test_version_json_list, get_test_project_json_list, \
     get_test_date_json_list
 from perfui.utility.common_util import get_test_content_number
+
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +32,7 @@ def show_perf_result(request, test_type):
     return render(request, 'perfui/perf_result.html', context=context)
 
 def _get_result_context(request, test_type):
-    load_test_results = PerfTestResult.objects.filter(test_type=test_type);
+    load_test_results = PerfTestResult.objects.filter(~Q(index_summary=u''),test_type=test_type);
     context = {'test_type': test_type,
                'test_type_list': get_test_type_json_list(),
                'test_project_list': get_test_project_json_list(),
@@ -91,7 +93,11 @@ def _get_result_summary_context(test_result):
                     })
         
     bitrate_perf_result = VEXPerfTestResult(test_result.bitrate_summary)
-    response_failure_rate = (100 * float('%0.6f' %bitrate_perf_result.response_failure))/ check_percent/ bitrate_perf_result.request_total
+    if bitrate_perf_result.request_total !=0:
+        response_failure_rate = (100 * float('%0.6f' %bitrate_perf_result.response_failure))/ check_percent/ bitrate_perf_result.request_total
+    else:
+        response_failure_rate = 0
+    
     result_context.update({'bitrate_response_average_response': bitrate_perf_result.response_average_time,
                     'bitrate_request_succeed_rate':bitrate_perf_result.request_succeed_rate,
                     'bitrate_response_success_rate': ('%0.2f' %(round(100 - response_failure_rate, 2))) + '%',
