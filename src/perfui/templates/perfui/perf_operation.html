@@ -36,11 +36,15 @@
 	    $('#vex_operations a').editable({
 	    	url:'/op/update',
 	        success: function(response) {
-	        	//alert(response)
 		    },
 		    error:function(data)
 		    {
-		        //alert(response);
+		    	//alert(data["status"]);
+		    	bootbox.alert({
+					title: "<p><strong class='text-danger'> Failure</p>",
+					message: "<p><strong class='text-warning'>" + data["responseText"] + "</p>",
+				    size: 'large'
+				});
 		    }
 	    });
 	    
@@ -73,7 +77,11 @@
 			</tr>
 			<tr>
 			     <td class="text-center" style="width:8%">Linear</td>
-			    <td style="word-break:break-all; word-wrap:break-all;"><em>Client call VEX for one master manifest first, then call for entertainment manifest every 2 seconds, so the benchmark key is total client from benchmark starting</em></td>
+			    <td style="word-break:break-all; word-wrap:break-all;">
+			    <em>Client call VEX for one master manifest first, then call for entertainment manifest every 2 seconds, so the benchmark key is total client from benchmark starting</em>
+				<br />
+				<em>Warm up time is only effective on benchmark starting, and after that never use it</em>
+				</td>
 			</tr>
 		</table>
     </div>
