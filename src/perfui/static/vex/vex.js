@@ -56,7 +56,7 @@ function operation(op_tag, op_id, btn_id, is_vex_operation, test_type, update_st
 	   						$("#btn_stop_" + op_id).show();
 	   						
 	   						try{ 
-	   							$('#warm_up_minute_' + op_id).editable('toggleDisabled');
+	   							$('#warm_up_minute_' + op_id).editable('disable');
 	   						}catch (e) { 
 	   						}
 	   					}
@@ -67,7 +67,7 @@ function operation(op_tag, op_id, btn_id, is_vex_operation, test_type, update_st
 	   						$("#btn_stop_" + op_id).hide();
 	   						
 	   						try{ 
-	   							$('#warm_up_minute_' + op_id).editable('toggleDisabled');
+	   							$('#warm_up_minute_' + op_id).editable('enable');
 	   						}catch (e) { 
 	   						}
 	   					}
