@@ -52,7 +52,7 @@ def _get_result_context(request, test_type):
         if request.GET.has_key('test_result_id'):
             test_result = PerfTestResult.objects.get(id=int(request.GET.get('test_result_id')));
         else:
-            test_result = load_test_results[-1]
+            test_result = load_test_results[0]
         context.update(
                 {
                 'no_result': False,

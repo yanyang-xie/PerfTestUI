@@ -39,7 +39,7 @@ class PerfTestResult(models.Model):
     
     class Meta:
         db_table = 'perf_result'
-        ordering = ['-test_date']
+        ordering = ['-test_date', '-id']
         get_latest_by = 'test_date'
         unique_together = ("project_name", "project_version", "test_type", "test_date")
 
