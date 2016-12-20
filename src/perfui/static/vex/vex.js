@@ -54,22 +54,14 @@ function operation(op_tag, op_id, btn_id, is_vex_operation, test_type, update_st
 	   						$("#op_status_" + op_id).html("Running");
 	   						$("#btn_start_" + op_id).hide();
 	   						$("#btn_stop_" + op_id).show();
-	   						
-	   						try{ 
-	   							$('#warm_up_minute').editable('toggleDisabled');
-	   						}catch (e) { 
-	   						}
+	   						$('#warm_up_minute').editable('toggleDisabled');
 	   					}
 	   					
 	   					if(op_tag=="stop" && update_status_message=="true"){
 	   						$("#op_status_" + op_id).html("Stopped");
 	   						$("#btn_start_" + op_id).show();
 	   						$("#btn_stop_" + op_id).hide();
-	   						
-	   						try{ 
-	   							$('#warm_up_minute').editable('toggleDisabled');
-	   						}catch (e) { 
-	   						}
+	   						$('#warm_up_minute').editable('toggleDisabled');
 	   					}
 	   					
 	   					getBasicCompontentStatus();
