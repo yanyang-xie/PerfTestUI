@@ -96,10 +96,10 @@ def update_operation_config(request):
         vex_op_object = get_object_or_404(VEXPerfTestOperation, pk=pk)
         perf_config = vex_op_object.perf_config
         
-        if name == 'content_size': perf_config.content_size=value
-        if name == 'bitrate_number': perf_config.bitrate_number=value
-        if name == 'session_number': perf_config.session_number=value
-        if name == 'warm_up_minute': perf_config.warm_up_minute=value
+        if name.find('content_size')>-1: perf_config.content_size=value
+        if name.find('bitrate_number')>-1: perf_config.bitrate_number=value
+        if name.find('session_number')>-1: perf_config.session_number=value
+        if name.find('warm_up_minute')>-1: perf_config.warm_up_minute=value
         
         perf_config.save()
         return HttpResponse('Saved')
