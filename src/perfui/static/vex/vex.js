@@ -9,10 +9,12 @@ function getStatus(url) {
         			$("#op_status_" + data[o].id).html("Running");
         			$("#btn_start_" + data[o].id).hide();
         			$("#btn_stop_" + data[o].id).show();
+        			$("#warm_up_minute_" + data[o].id).editable('disable');
         		}else if (data[o].status == 1){
         			$("#btn_stop_" + data[o].id).hide();
         			$("#btn_start_" + data[o].id).show();
         			$("#op_status_" + data[o].id).html("Stopped");
+        			$("#warm_up_minute_" + data[o].id).editable('enable');
         		}else{
         		}
             } 
