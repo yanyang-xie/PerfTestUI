@@ -133,7 +133,7 @@
 		            		<span class="add-on">Session</span>
 		            	{% endifequal %}
 		            </td>
-		            <td><a href="#" id="warm_up_minute" name="warm_up_minute" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.warm_up_minute }}</a> Minutes</td>
+		            <td><a href="#" id="warm_up_minute_{{ vex_operation.id }}" name="warm_up_minute" data-pk="{{ vex_operation.id }}">{{ vex_operation.perf_config.warm_up_minute }}</a> Minutes</td>
 		            <td id="op_status_{{vex_operation.id}}" >
 			            {% if vex_operation.status_flag %}
 			            	Running
