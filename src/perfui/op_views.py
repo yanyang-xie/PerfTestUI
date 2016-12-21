@@ -103,7 +103,7 @@ def update_operation_config(request):
         if name.find('session_number')>-1:
             
             # to linear, if it is running, then session number could not be decreased.
-            if vex_op_object.test_type in [CHOICES_TYPE[-1][0]] and vex_op_object.status_flag is True and value < perf_config.session_number:
+            if perf_config.test_type in [CHOICES_TYPE[-1][0]] and vex_op_object.status_flag is True and value < perf_config.session_number:
                 logger.error('Linear performance test is running, value of %s must be larger than before. %s' %(name))
                 response = HttpResponseBadRequest('Linear performance test is running, value of %s must be larger than before. %s' %(name))
                 return response
