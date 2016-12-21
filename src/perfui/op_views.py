@@ -8,8 +8,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 import requests
 from requests.exceptions import ConnectionError, Timeout
 
-from perfui.models import VEXPerfTestOperation, Operation, STATUS_TYPE,\
-    OperationGroup
+from perfui.models import VEXPerfTestOperation, Operation, STATUS_TYPE, \
+    OperationGroup, CHOICES_TYPE
 
 
 logger = logging.getLogger(__name__)
@@ -98,8 +98,17 @@ def update_operation_config(request):
         
         if name.find('content_size')>-1: perf_config.content_size=value
         if name.find('bitrate_number')>-1: perf_config.bitrate_number=value
-        if name.find('session_number')>-1: perf_config.session_number=value
         if name.find('warm_up_minute')>-1: perf_config.warm_up_minute=value
+        
+        if name.find('session_number')>-1:
+            
+            # to linear, if it is running, then session number could not be decreased.
+            if vex_op_object.test_type in [CHOICES_TYPE[-1][0]] and vex_op_object.status_flag is True and value < perf_config.session_number:
+                logger.error('Linear performance test is running, value of %s must be larger than before. %s' %(name))
+                response = HttpResponseBadRequest('Linear performance test is running, value of %s must be larger than before. %s' %(name))
+                return response
+            else: 
+                perf_config.session_number=value
         
         perf_config.save()
         return HttpResponse('Saved')

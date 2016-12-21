@@ -5,7 +5,7 @@ from Crypto.Random.random import choice
 
 # choices = ['value', 'display name']
 CHOICES_PROJECT = [('VEX-Core', 'VEX-Core'), ('VEX-Frontend', 'VEX-Frontend')]
-CHOICES_TYPE = [('VOD_T6', 'T6VOD'), ('CDVR_T6', 'CDVR_T6'), ('LINEAR_T6', 'LINEAR_T6')]
+CHOICES_TYPE = [('VOD_T6', 'VOD_T6'), ('CDVR_T6', 'CDVR_T6'), ('LINEAR_T6', 'LINEAR_T6')]
 CHOICES_CONTENT_PREFIX = [('vod_test_', 'vod_test_'), ('t6_test_', 't6_test_'), ('cdvr_hot', 'cdvr_hot'), ('cdvr_fixed', 'cdvr_fixed'), ]
 
 class PerfTestResult(models.Model):
@@ -143,10 +143,11 @@ class Operation(BasicOperation):
 class VEXPerfTestOperation(BasicOperation):
     result_collect_command = models.CharField(max_length=512, blank=True, null=True)
     perf_config = models.OneToOneField(PerfTestConfig, blank=True, null=True,)
+    test_type = models.CharField(max_length=100, choices=CHOICES_TYPE, blank=False, null=False, default=CHOICES_TYPE[0][0])
     
     class Meta:
         db_table = 'perf_operation'
     
     def __unicode__(self):
-        return 'id:{}, name:{}, result_collect_command:{}, perf_config:[{}]'.format(self.id, self.name, self.result_collect_command, self.perf_config)
+        return 'id:{}, name:{},test_type:{} result_collect_command:{}, perf_config:[{}]'.format(self.id, self.name, self.test_type, self.result_collect_command, self.perf_config)
     
