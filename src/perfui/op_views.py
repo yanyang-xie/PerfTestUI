@@ -57,8 +57,8 @@ def operation(request):
         stdout, stderr, ex = _execute_command(command, obj.timeout, True)
         if stderr is not None and len(stderr) > 0:
             logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr)))
-            json_data = json.dumps({"status_code": 500, "message":"Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr[-1]).replace('\n', ''))})
-            logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr[-1]).replace('\n', '')))
+            json_data = json.dumps({"status_code": 500, "message":"Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr).replace('\n', ''))})
+            #logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr).replace('\n', '')))
             return HttpResponse(json_data, content_type="application/json")
         elif ex is not None:
             logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(ex)))
