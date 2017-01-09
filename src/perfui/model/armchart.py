@@ -40,7 +40,7 @@ class AmSerialchartModel(object):
                                }
         
         if tag is not None and tag != '':
-            am_chart_defination[string.lower(tag) + '_serial_chart_category_axis_title'] = tag + '' + serial_chart_category_axis_title
+            am_chart_defination[string.lower(tag) + '_serial_chart_category_axis_title'] = tag + ' ' + serial_chart_category_axis_title
         else:
             am_chart_defination['serial_chart_category_axis_title'] = serial_chart_category_axis_title
         

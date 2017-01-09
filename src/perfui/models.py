@@ -149,4 +149,3 @@ class VEXPerfTestOperation(BasicOperation):
     
     def __unicode__(self):
         return 'id:{}, name:{}, result_collect_command:{}, perf_config:[{}]'.format(self.id, self.name, self.result_collect_command, self.perf_config)
-    

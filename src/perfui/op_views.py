@@ -55,7 +55,7 @@ def operation(request):
             raise Exception("Not found command['%s']" %(op_tag))
         
         stdout, stderr, ex = _execute_command(command, obj.timeout, True)
-        if stderr is not None and len(stderr) > 0 and stderr.strip()!="":
+        if stderr is not None and len(stderr) > 0:
             logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr)))
             json_data = json.dumps({"status_code": 500, "message":"Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr[-1]).replace('\n', ''))})
             logger.error("Failed to execute ['%s'] operation. Reason:[%s]" %(op_tag, str(stderr[-1]).replace('\n', '')))
@@ -83,7 +83,7 @@ def operation(request):
         return HttpResponse(json_data, content_type="application/json")
     except Exception, e:
         logger.error("Internal Server ERROR. Failed to execute [%s] operation. %s" %(op_tag, e))
-        json_data = json.dumps({"status_code": 500, "message":"Internal Server ERROR"})
+        json_data = json.dumps({"status_code": 500, "message":"Internal Server ERROR. <p>%s</p>" %(str(e))})
         return HttpResponse(json_data, content_type="application/json")
 
 def update_operation_config(request):
