@@ -55,7 +55,7 @@ class VEXAmSerialchartModel(AmSerialchartModel):
         armchart_column_dict = {}
         armchart_column_keys = []
         #armchart_colors = ['#FF0F00', '#FF6600', '#FF9E01', '#FCD202', '#F8FF01', '#B0DE09', '#04D215', '#0D8ECF', '#0D52D1', '#2A0CD0', '#8A0CCF']
-        armchart_colors = ['#B0DE09', '#F8FF01', '#FCD202', '#FF9E01', '#FF6600', '#FF0F00', '#FF6600', '#FCD202', '#04D215', '#0D8ECF', '#0D52D1', '#2A0CD0', '#8A0CCF']
+        armchart_colors = ['#04D215', '#B0DE09', '#F8FF01', '#FCD202', '#FF9E01', '#FF6600', '#FF0F00', '#FF6600', '#FCD202', '#0D8ECF', '#0D52D1', '#2A0CD0', '#8A0CCF']
         
         for amchart_column in self.amchart_column_list:
             vex_time_distribution = amchart_column.get(serial_chart_category_field_tag)
