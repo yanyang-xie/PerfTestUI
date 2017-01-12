@@ -64,7 +64,7 @@
 <row class="col-sm-12 col-md-12">
     <div class="panel panel-success">
 	    <div class="panel-heading">
-			<h3 class="panel-title">Benchmark Test Environment</h3>
+			<h3 class="panel-title">Benchmark Test Profile</h3>
 		</div>
 		<div class="panel-body">
 			<p class="text-success">This page is to start or stop VEX benchmark test, then collect benchmark test result in time.</p>
@@ -72,15 +72,23 @@
 		<table class="table table-condensed text-info table-striped" style="word-break:break-all; word-wrap:break-all;">
 			<tr>
 			    <td class="text-center" style="width:8%">VOD</td>
-			    <td style="word-break:break-all; word-wrap:break-all;"><em>Client call VEX only once for master manifest and entertainment manifest, so the benchmark key is concurrent request number per second</em>
+			    <td style="word-break:break-all; word-wrap:break-all;">
+			    <em>
+			    Start with one master manifest request and two bitrate requests for every session.
+			    <br />
+			    VEX benchmark key is the number of concurrent sessions per second
+			    </em>
 			    </td>
 			</tr>
 			<tr>
-			     <td class="text-center" style="width:8%">Linear</td>
+			    <td class="text-center" style="width:8%">Linear</td>
 			    <td style="word-break:break-all; word-wrap:break-all;">
-			    <em>Client call VEX for one master manifest first, then call for entertainment manifest every 2 seconds, so the benchmark key is total client from benchmark starting</em>
+			    <em>
+			    Start with one master manifest request and one bitrate request, and continuously serve a bitrate request every 2 seconds for every session
+			    <br />
+			    VEX benchmark key is the max number of concurrent sessions it can manage
+			    </em>
 				<br />
-				<em>Warm up time is only effective on benchmark starting, and after that never use it</em>
 				</td>
 			</tr>
 		</table>
