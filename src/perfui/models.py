@@ -2,6 +2,8 @@
 from django.db import models
 from perfui.utility.date_util import get_current_day_start_date
 from Crypto.Random.random import choice
+from bson.json_util import default
+from wheel.metadata import unique
 
 # choices = ['value', 'display name']
 CHOICES_PROJECT = [('VEX-Core', 'VEX-Core'), ('VEX-Frontend', 'VEX-Frontend')]
@@ -149,3 +151,15 @@ class VEXPerfTestOperation(BasicOperation):
     
     def __unicode__(self):
         return 'id:{}, name:{}, result_collect_command:{}, perf_config:[{}]'.format(self.id, self.name, self.result_collect_command, self.perf_config)
+
+class VEXVersion(models.Model):
+    version = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    enable = models.BooleanField(default=False)
+    
+    def __unicode__(self):
+        return 'id:{}, version:{}, enable:{}'.format(self.id, self.version, self.enable)
+    
+    class Meta:
+        db_table = 'vex_version'
+        ordering = ['vex_version', ]
+        get_latest_by = 'vex_version'
