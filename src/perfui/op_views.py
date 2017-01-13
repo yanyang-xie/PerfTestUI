@@ -9,7 +9,7 @@ import requests
 from requests.exceptions import ConnectionError, Timeout
 
 from perfui.models import VEXPerfTestOperation, Operation, STATUS_TYPE, \
-    OperationGroup, CHOICES_TYPE
+    OperationGroup, CHOICES_TYPE, VEXVersion
 
 
 logger = logging.getLogger(__name__)
@@ -53,6 +53,14 @@ def operation(request):
         logger.debug("Operation:[id:%s, tag:%s]. Command is [%s]" % (op_id, op_tag, command))
         if command == "":
             raise Exception("Not found command['%s']" %(op_tag))
+        
+        # for vex customization
+        if op_tag == 'deploy':
+            try:
+                version = get_object_or_404(VEXVersion, enable=True)
+                command += ' -v %s' %(version.version)
+            except:
+                pass
         
         stdout, stderr, ex = _execute_command(command, obj.timeout, True)
         if stderr is not None and len(stderr) > 0:

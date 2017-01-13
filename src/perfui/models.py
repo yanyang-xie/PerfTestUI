@@ -157,6 +157,12 @@ class VEXVersion(models.Model):
     def __unicode__(self):
         return 'id:{}, version:{}, enable:{}'.format(self.id, self.version, self.enable)
     
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.enable is True:
+            VEXVersion.objects.all().update(enable=False)
+        
+        super(VEXVersion, self).save(force_insert, force_update, using, update_fields)
+    
     class Meta:
         db_table = 'vex_version'
         ordering = ['version', ]
