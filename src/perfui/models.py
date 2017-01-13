@@ -2,8 +2,6 @@
 from django.db import models
 from perfui.utility.date_util import get_current_day_start_date
 from Crypto.Random.random import choice
-from bson.json_util import default
-from wheel.metadata import unique
 
 # choices = ['value', 'display name']
 CHOICES_PROJECT = [('VEX-Core', 'VEX-Core'), ('VEX-Frontend', 'VEX-Frontend')]
