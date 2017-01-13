@@ -161,5 +161,5 @@ class VEXVersion(models.Model):
     
     class Meta:
         db_table = 'vex_version'
-        ordering = ['vex_version', ]
-        get_latest_by = 'vex_version'
+        ordering = ['version', ]
+        get_latest_by = 'version'
