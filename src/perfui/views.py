@@ -90,6 +90,7 @@ def _get_result_summary_context(test_result):
                     'index_request_succeed_rate':index_perf_result.request_succeed_rate,
                     'request_total':index_perf_result.request_total,
                     'test_duration':index_perf_result.test_duration,
+                    'index_response_time_distribution_list':index_perf_result.response_time_distribution_percent_list
                     })
         
     bitrate_perf_result = VEXPerfTestResult(test_result.bitrate_summary)
@@ -102,6 +103,7 @@ def _get_result_summary_context(test_result):
                     'bitrate_request_succeed_rate':bitrate_perf_result.request_succeed_rate,
                     'bitrate_response_success_rate': ('%0.2f' %(round(100 - response_failure_rate, 2))) + '%',
                     'bitrate_response_error_details': test_result.error_details.strip(),
+                    'bitrate_response_time_distribution_list':bitrate_perf_result.response_time_distribution_percent_list
                     })
     
     index_am_chart_info, index_am_chart_defination = generate_vex_am_serial_chart_info(index_perf_result.response_time_distribution_list, "Index")

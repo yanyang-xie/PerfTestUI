@@ -9,6 +9,7 @@ class VEXPerfTestResult():
         self.response_average_time_tag = 'Response Average Time'
         self.response_failure_tag = 'Response Failure'
         self.response_time_distribution_tag = 'millisecond'
+        self.response_time_distribution_metric_sep = '-'
         
         self.test_duration = 1
         self.request_total = 0
@@ -17,6 +18,7 @@ class VEXPerfTestResult():
         self.response_average_time = 1
         self.response_failure = 0
         self.response_time_distribution_list = []
+        self.response_time_distribution_percent_list = []
         
         self.parse()
     
@@ -52,8 +54,16 @@ class VEXPerfTestResult():
                 continue
             
             if key.find(self.response_time_distribution_tag) > -1:
-                self.response_time_distribution_list.append([key.replace(self.response_time_distribution_tag,'').strip(), int(value.strip())])
+                response_time_distribution = key.replace(self.response_time_distribution_tag,'').strip()
+                response_time_distribution_list = response_time_distribution.split(self.response_time_distribution_metric_sep)
+                response_time_distribution = '%-6s-%6s' %(str(response_time_distribution_list[0]), str(response_time_distribution_list[1]))
+                
+                self.response_time_distribution_list.append([response_time_distribution, int(value.strip())])
                 continue
+        
+        for distribution in self.response_time_distribution_list:
+            percent = (100 * float('%0.6f' %distribution[1]))/ self.request_total
+            self.response_time_distribution_percent_list.append([distribution[0], '%0.4f' %(percent)])
 
 if __name__ == '__main__':
     result_info = '''
@@ -84,4 +94,5 @@ if __name__ == '__main__':
     print r.response_average_time
     print r.response_failure
     print r.response_time_distribution_list
+    print r.response_time_distribution_percent_list
     
