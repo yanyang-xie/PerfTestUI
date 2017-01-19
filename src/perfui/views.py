@@ -67,8 +67,6 @@ def _get_result_context(request, test_type):
         context.update(_get_result_error_details_context(test_result))
         
         if test_type.find('VOD') < 0:
-            context['client_number'] = context['request_total']
-        else:
             context['client_number'] = context['index_request_succeed']
         
         if test_type.find('CDVR') > -1:

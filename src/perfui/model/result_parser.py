@@ -66,7 +66,8 @@ class VEXPerfTestResult():
             percent = (100 * float('%0.6f' %distribution[1]))/ self.request_total
             self.response_time_distribution_percent_list.append([distribution[0], '%0.4f' %(percent)])
         
-        self.request_succeed = int(self.request_total * float(self.request_succeed_rate.replace('%', '')))
+        self.request_succeed = int(self.request_total * float(self.request_succeed_rate.replace('%', ''))) / 100
+        print self.request_succeed
 
 if __name__ == '__main__':
     result_info = '''
