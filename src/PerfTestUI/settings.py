@@ -82,8 +82,8 @@ DATABASES = {
           'NAME': 'perftest',  # Or path to database file if using sqlite3.
           'USER': 'root',  # Not used with sqlite3.
           'PASSWORD': '_Thi5_T3chnolo9y',  # Not used with sqlite3.
-          #'HOST': '127.0.0.1',  # Set to empty string for localhost. Not used with sqlite3.
-          'HOST': '54.169.51.181',
+          'HOST': '127.0.0.1',  # Set to empty string for localhost. Not used with sqlite3.
+          #'HOST': '54.169.51.181',
           'PORT': '3306',  # Set to empty string for default. Not used with sqlite3.
      }
 }
