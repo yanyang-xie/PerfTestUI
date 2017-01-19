@@ -68,6 +68,8 @@ def _get_result_context(request, test_type):
         
         if test_type.find('VOD') < 0:
             context['client_number'] = context['request_total']
+        else:
+            context['client_number'] = context['index_request_succeed']
         
         if test_type.find('CDVR') > -1:
             context['asset_number'] = context['client_number']
@@ -88,6 +90,7 @@ def _get_result_summary_context(test_result):
     result_context['request_concurrent'] = (index_perf_result.request_concurrent + 1 ) / test_result.instance_number
     result_context.update({'index_response_average_response': index_perf_result.response_average_time,
                     'index_request_succeed_rate':index_perf_result.request_succeed_rate,
+                    'index_request_succeed':index_perf_result.request_succeed,
                     'request_total':index_perf_result.request_total,
                     'test_duration':index_perf_result.test_duration,
                     'index_response_time_distribution_list':index_perf_result.response_time_distribution_percent_list
